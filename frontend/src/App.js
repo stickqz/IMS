@@ -1,18 +1,12 @@
-import React, { useState } from "react";
-import "./App.css";
-import SignupForm from "./components/SignupForm";
+import classes from "./App.module.css";
+import LandingPage from "./components/Landing/LandingPage";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Signup Page</h1>
-      </header>
-      <main>
-        <SignupForm />
-      </main>
-    </div>
-  );
+	return (
+		<div className={classes.app}>
+			<LandingPage />
+		</div>
+	);
 }
 
 export default App;
