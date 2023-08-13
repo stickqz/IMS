@@ -1,7 +1,12 @@
-import "./App.css";
+import classes from "./App.module.css";
+import LandingPage from "./components/Landing/LandingPage";
 
 function App() {
-  return <div className="App"></div>;
+	return (
+		<div className={classes.app}>
+			<LandingPage />
+		</div>
+	);
 }
 
 export default App;
