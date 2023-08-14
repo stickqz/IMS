@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form";
+import classes from "./Register.module.css";
 
-import classes from "./LoginForm.module.css";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 
-const LoginForm = (props) => {
+const Register = (props) => {
 	const { register, handleSubmit, errors } = useForm();
 	const [userInfo, setUserInfo] = useState();
 	const onSubmit = (data) => {
@@ -23,17 +23,25 @@ const LoginForm = (props) => {
 				placeholder="username"
 				{...register("username", { required: true })}
 			/>
+			<label>Email</label>
+			<input
+				type="text"
+				id="email"
+				label="Email"
+				placeholder="example@gmail.com"
+				{...register("email", { required: true })}
+			/>
 			<label>Password </label>
 			<input
 				type="password"
 				id="password"
 				label="Password"
 				placeholder="********"
-				{...register("password")}
+				{...register("password", { required: true })}
 			/>
 			<button className={classes.sig}>Continue</button>
 		</form>
 	);
 };
 
-export default LoginForm;
+export default Register;

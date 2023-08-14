@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import classes from "./LandingPage.module.css";
 import LoginForm from "../Form/LoginForm";
-import bg from "../../assets/bg.jpg";
+import Register from "../Form/Register";
+import Card from "../UI/Card/Card";
 
 const LandingPage = () => {
 	const [adminLogin, setAdminLogin] = useState(false);
-	const [userLogin, setUserLogin] = useState(false);
+	const [userLogin, setUserLogin] = useState(true);
 	const [adminSignup, setAdminSignup] = useState(false);
 
 	const adminSignupHandler = () => {
@@ -26,19 +27,22 @@ const LandingPage = () => {
 
 	return (
 		<div className={classes.container}>
-			<div className={classes.img}>
-				<img className={classes.img} alt="img" src={bg} />
-			</div>
-			<div className={` ${classes.box} ${classes.overlay} `}>
-				<button onClick={adminLoginHandler}>Admin Login</button>
-				<button onClick={userLoginHandler}>User Login</button>
-				<button onClick={adminSignupHandler}>Admin Signup</button>
-				<div className={classes.wrapper}>
+			<Card className={classes.landing}>
+				<button className={classes.btn} onClick={adminLoginHandler}>
+					Admin Login
+				</button>
+				<button className={classes.btn} onClick={userLoginHandler}>
+					User Login
+				</button>
+				<button className={classes.btn} onClick={adminSignupHandler}>
+					Admin Signup
+				</button>
+				<div>
 					{userLogin && <LoginForm name={"User Login"} />}
 					{adminLogin && <LoginForm name={"Admin Login"} />}
-					{adminSignup && <LoginForm name={"Admin Signup"} />}
+					{adminSignup && <Register name={"Admin Signup"} />}
 				</div>
-			</div>
+			</Card>
 		</div>
 	);
 };
