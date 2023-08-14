@@ -1,0 +1,151 @@
+.container {
+    display: flex;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .firsthalf {
+    flex: 7;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .secondhalf {
+    flex: 3;
+    padding: 20px;
+    background: url('../../assets/bg.jpg') center/cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    border-radius: 2.5% 0 0 2.5%;
+  }
+  .secondhalf p{
+    font-size: 113%;
+    font-family: cursive;
+    
+  }
+  .secondhalf h3{
+    font-size: 200%;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  
+  .tabs {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .tabs label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .tab-label {
+    display: inline-block;
+    margin: 3px 20px 0 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+  }
+  
+  .switch input {
+    display: none;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 30px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  .switch.admin .slider {
+    background-color: #f44336;
+  }
+  
+  .switch.user .slider:before {
+    transform: translateX(30px);
+  }
+  
+  .login-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .name-field {
+    text-align: left;
+    margin-left: 5%;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    margin-right: -10px;
+    margin-top: 3%;
+    margin-bottom: 7%;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; 
+  }
+  
+  .create-account-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #00f1ff87;
+    color: #ffffff;
+    border-radius: 25px;
+    cursor: pointer;
+  }
+  
+  .create-account-button.active {
+    background-color: #f44336;
+  }
+  
+  button[type="submit"].login-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #006eb8;
+    color: #ffffff;
+    border-radius: 25px;
+    cursor: pointer;
+    width: fit-content;
+    margin-left: 25%;
+  }
+  
