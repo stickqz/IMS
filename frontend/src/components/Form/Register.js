@@ -4,16 +4,15 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 const Register = (props) => {
-	const { register, handleSubmit, errors } = useForm();
+	const { register, handleSubmit } = useForm();
+
 	const [userInfo, setUserInfo] = useState();
 	const onSubmit = (data) => {
 		setUserInfo(data);
-		console.log(data);
 	};
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-			<h2>{props.name}</h2>
 			<pre>{JSON.stringify(userInfo, undefined, 2)}</pre>
 			<label>User Name </label>
 			<input
@@ -21,7 +20,7 @@ const Register = (props) => {
 				id="username"
 				label="UserName"
 				placeholder="username"
-				{...register("username", { required: true })}
+				{...register("username", { required: "Enter User Name" })}
 			/>
 			<label>Email</label>
 			<input
@@ -29,7 +28,7 @@ const Register = (props) => {
 				id="email"
 				label="Email"
 				placeholder="example@gmail.com"
-				{...register("email", { required: true })}
+				{...register("email", { required: "Enter email" })}
 			/>
 			<label>Password </label>
 			<input
@@ -37,9 +36,9 @@ const Register = (props) => {
 				id="password"
 				label="Password"
 				placeholder="********"
-				{...register("password", { required: true })}
+				{...register("password", { required: "Enter Password" })}
 			/>
-			<button className={classes.sig}>Continue</button>
+			<button className={classes.sigbtn}>Continue</button>
 		</form>
 	);
 };

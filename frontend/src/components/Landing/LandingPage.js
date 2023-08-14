@@ -4,43 +4,62 @@ import LoginForm from "../Form/LoginForm";
 import Register from "../Form/Register";
 import Card from "../UI/Card/Card";
 
+const TABS = {
+	AdminLogin: "Admin Login",
+	UserLogin: "User Login",
+	AdminSignup: "Admin Signup",
+};
+
 const LandingPage = () => {
-	const [adminLogin, setAdminLogin] = useState(false);
-	const [userLogin, setUserLogin] = useState(true);
-	const [adminSignup, setAdminSignup] = useState(false);
+	const [activeTab, setActiveTab] = useState(TABS.AdminLogin);
 
 	const adminSignupHandler = () => {
-		setAdminSignup(true);
-		setAdminLogin(false);
-		setUserLogin(false);
+		setActiveTab(TABS.AdminSignup);
 	};
 	const adminLoginHandler = () => {
-		setAdminLogin(true);
-		setUserLogin(false);
-		setAdminSignup(false);
+		setActiveTab(TABS.AdminLogin);
 	};
 	const userLoginHandler = () => {
-		setAdminLogin(false);
-		setAdminSignup(false);
-		setUserLogin(true);
+		setActiveTab(TABS.UserLogin);
 	};
 
 	return (
 		<div className={classes.container}>
 			<Card className={classes.landing}>
-				<button className={classes.btn} onClick={adminLoginHandler}>
+				<button
+					className={` ${classes.btn} ${
+						activeTab === TABS.AdminLogin ? classes.activeBtn : ""
+					}`}
+					onClick={adminLoginHandler}
+				>
 					Admin Login
 				</button>
-				<button className={classes.btn} onClick={userLoginHandler}>
+				<button
+					className={` ${classes.btn} ${
+						activeTab === TABS.UserLogin ? classes.activeBtn : ""
+					}`}
+					onClick={userLoginHandler}
+				>
 					User Login
 				</button>
-				<button className={classes.btn} onClick={adminSignupHandler}>
+				<button
+					className={` ${classes.btn} ${
+						activeTab === TABS.AdminSignup ? classes.activeBtn : ""
+					}`}
+					onClick={adminSignupHandler}
+				>
 					Admin Signup
 				</button>
 				<div>
-					{userLogin && <LoginForm name={"User Login"} />}
-					{adminLogin && <LoginForm name={"Admin Login"} />}
-					{adminSignup && <Register name={"Admin Signup"} />}
+					{activeTab === TABS.UserLogin && (
+						<LoginForm name={"User Login"} />
+					)}
+					{activeTab === TABS.AdminLogin && (
+						<LoginForm name={"Admin Login"} />
+					)}
+					{activeTab === TABS.AdminSignup && (
+						<Register name={"Admin Signup"} />
+					)}
 				</div>
 			</Card>
 		</div>
