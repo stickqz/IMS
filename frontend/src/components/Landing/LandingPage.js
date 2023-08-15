@@ -1,20 +1,52 @@
 import React, { useState } from "react";
 import "./LandingPage.css";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Import useHistory
+import axios from "axios"; // Import Axios
 
 function LandingPage() {
   const [activeTab, setActiveTab] = useState("loginAdmin");
+  const [loginError, setLoginError] = useState(null); // State for error message
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    if (activeTab === "loginAdmin") {
-      console.log(" ");
-    } else if (activeTab === "loginUser") {
-      console.log(" ");
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    let loginSuccess = false; // Flag to track successful login
+
+    try {
+      if (activeTab === "loginAdmin") {
+        const response = await axios.post("http://localhost:5000/api/login", {
+          email,
+          password,
+        });
+        if (response.status === 200) {
+          console.log("Admin login successful");
+          loginSuccess = true;
+        }
+      } else if (activeTab === "loginUser") {
+        const response = await axios.post("http://localhost:5000/api/login", {
+          email,
+          password,
+        });
+        if (response.status === 200) {
+          console.log("User login successful");
+          loginSuccess = true;
+        }
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+
+    if (loginSuccess) {
+      // Redirect to dashboard
+      window.location.href = "/dashboard";
+    } else {
+      // Display error message
+      setLoginError("Invalid credentials. Please try again.");
     }
   };
 
@@ -41,12 +73,17 @@ function LandingPage() {
         </div>
         <div className="login-form">
           <form onSubmit={handleLogin}>
-            <label className="name-field">Username :</label>
-            <input type="text" placeholder="Enter Username" />
+            <label className="name-field">Email :</label>
+            <input type="text" name="email" placeholder="Enter Email" />
             <br />
             <label className="name-field">Password :</label>
-            <input type="password" placeholder="Enter Password" />
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter Password"
+            />
             <br />
+            {loginError && <p className="error">{loginError}</p>}
             <button type="submit" className="login-button">
               {activeTab === "loginAdmin" ? "Login As Admin" : "Login As User"}
             </button>
