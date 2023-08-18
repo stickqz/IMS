@@ -3,86 +3,36 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const Admin = require("../models/Admin");
-const Employee = require("../models/Employee");
+// Import the User model (assuming you have one defined)
+const User = require("../models/User");
 
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
+// Define the '/signup' route
+router.post("/signup", async (req, res) => {
   try {
-    const decodedToken = jwt.verify(token, "anujrajprasoon");
-    req.user = decodedToken; // Store the decoded token in request object
-    next();
-  } catch (error) {
-    console.error("JWT verification error:", error);
-    res.status(401).json({ message: "Unauthorized" });
-  }
-};
+    const { username, email, password } = req.body;
 
-// Define the '/admin/signup' route for admin registration
-router.post("/admin/signup", async (req, res) => {
-  try {
-    const { username, email, password, shopName } = req.body;
-
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingAdmin) {
+    // Check if user with the same email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       return res
         .status(400)
-        .json({ message: "Admin with this email already exists" });
+        .json({ message: "User with this email already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
 
-    const newAdmin = new Admin({
+    // Create and save the user
+    const newUser = new User({
       username,
       email,
-      password: hashedPassword,
-      shopName,
+      password: hashedPassword, // Store hashed password
     });
-    await newAdmin.save();
+    await newUser.save();
 
-    res.status(201).json({ message: "Admin registered successfully" });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("Admin Signup error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// Define the '/admin/employee' route for admin to create an employee
-router.post("/admin/employee", async (req, res) => {
-  try {
-    const { username, password, address, email, adminId } = req.body;
-
-    const admin = await Admin.findById(adminId);
-    if (!admin) {
-      return res.status(400).json({ message: "Admin not found" });
-    }
-
-    const existingEmployee = await Employee.findOne({ email });
-    if (existingEmployee) {
-      return res
-        .status(400)
-        .json({ message: "Employee with this email already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newEmployee = new Employee({
-      username,
-      email,
-      password: hashedPassword,
-      address,
-      admin: admin._id, // Link to the admin who is creating the employee
-    });
-    await newEmployee.save();
-
-    res.status(201).json({ message: "Employee registered successfully" });
-  } catch (error) {
-    console.error("Employee Creation error:", error);
+    console.error("Signup error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -90,18 +40,9 @@ router.post("/admin/employee", async (req, res) => {
 // New route for user login
 router.post("/login", async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
-    let user;
-
-    if (role === "admin") {
-      user = await Admin.findOne({ email });
-    } else if (role === "employee") {
-      user = await Employee.findOne({ email });
-    } else {
-      return res.status(400).json({ message: "Invalid role" });
-    }
-
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
