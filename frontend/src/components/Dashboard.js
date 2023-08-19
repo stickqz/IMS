@@ -1,77 +1,60 @@
-import React, { useState, useEffect } from "react";
-import "./Dashboard.css";
-import axios from "axios"; // Import axios
-import Cookies from "js-cookie"; // Import the js-cookie library
+// Dashboard.js
+
+import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
+import axios from "axios";
 
-const Dashboard = () => {
-  const [userName, setUserName] = useState(""); // State to hold the user's name
-  const [userRole, setUserRole] = useState(""); // State to hold the user's role
-
-  const handleLogout = async () => {
-    try {
-      // Make an API request to log out
-      await axios.post("http://localhost:5000/api/logout");
-
-      // Remove the token from the cookie on the client side
-      Cookies.remove("token"); // Remove the token cookie
-
-      console.log("Logged out");
-
-      // Redirect the user to the home page
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
+function Dashboard() {
+  const [userData, setUserData] = useState(null);
+  const token = localStorage.getItem("token"); // Retrieve token from storage
+  console.log("Token exists:", token);
 
   useEffect(() => {
-    // Fetch the user's name and role from the server
-    const fetchUserData = async () => {
-      try {
-        const token = Cookies.get("token");
-        if (!token) {
-          // Handle case where token is not present
-          console.log("error is me");
-          return;
-        }
+    if (token) {
+      const decoded = jwt_decode(token);
+      const role = decoded.role;
+      console.log("Decoded Token exists:", decoded);
 
-        // Decode the token to get user role
-        const decodedToken = jwt_decode(token); // You need to import jwt_decode
+      axios
+        .get(`http://localhost:5000/api/${role}/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUserData(response.data);
+        })
+        .catch((error) => {
+          // Handle different types of errors
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            console.error("Error response from server:", error.response);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.error("No response from server:", error.request);
+          } else {
+            // Something happened in setting up the request
+            console.error("Request setup error:", error.message);
+          }
 
-        // Fetch the user's name based on role
-        const response = await axios.get(
-          "http://localhost:5000/api/getUserName"
-        );
-        setUserName(response.data.name); // Assuming the response has a 'name' field
-
-        // Set the user's role
-        setUserRole(decodedToken.role);
-      } catch (error) {
-        console.error("Fetch user data error:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+          localStorage.removeItem("token");
+        });
+    }
+  }, [token]);
 
   return (
-    <div className="dashboard-container">
-      <div className="sidebar">
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-      <div className="content">
-        <div className="content-inner">
-          {userName && (
-            <p>
-              Welcome, {userRole === "employee" ? "Employee" : "Admin"}{" "}
-              {userName}!
-            </p>
-          )}
+    <div>
+      {userData ? (
+        <div>
+          <h2>Welcome to Your Dashboard, {userData.username}</h2>
+          <p>Email: {userData.email}</p>
+          {/* Display other user-specific information */}
         </div>
-      </div>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
-};
+}
 
 export default Dashboard;

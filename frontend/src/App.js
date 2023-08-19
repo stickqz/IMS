@@ -1,18 +1,22 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./components/Form/Register.js";
 import LandingPage from "./components/Landing/LandingPage.js";
 import Dashboard from "./components/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<LandingPage />}></Route>
-				<Route path="/register" element={<Register />}></Route>
-				<Route path="/dashboard" element={<Dashboard />}></Route>
-			</Routes>
-		</BrowserRouter>
-	);
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<Register />} />
+        <Route element={<PrivateRoute />}>
+          <Route element={<Dashboard />} path="/dashboard" />
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
