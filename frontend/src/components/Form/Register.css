@@ -42,19 +42,17 @@
 	margin-left: 2%;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="email"] {
-	padding: 12px; /* Increase padding by 20% */
+/* .input-field {
+	padding: 1px;
 	width: 100%;
 	border: 1px solid #000000;
-	border-radius: 15px; /* Increase border-radius by 20% */
+	border-radius: 15px;
 	margin-right: -12px;
 	margin-top: 3.6%;
 	height: 10%;
 	font-size: 1rem;
-	margin-bottom: 8.4%; /* Increase margin by 20% */
-}
+	margin-bottom: 8.4%;
+} */
 .reg-button-container {
 	display: flex;
 	justify-content: center;
