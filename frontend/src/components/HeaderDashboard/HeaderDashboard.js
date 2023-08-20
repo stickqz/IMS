@@ -1,10 +1,10 @@
 // Dashboard.js
-import Navbar from "./HeaderComponents/Dashboard/Navbar/Navbar";
-import CreateOrder from "./HeaderComponents/Dashboard/StockManagement/CreateOrder";
-import EmployeeManagement from "./HeaderComponents/Dashboard/EmployeeManagement/EmployeeManagement";
-import StockManagement from "./HeaderComponents/Dashboard/StockManagement/StockManagement";
-import SalesHistory from "./HeaderComponents/Dashboard/SalesHistory/SalesHistory";
-import Billing from "./HeaderComponents/Dashboard/Billing/Billing";
+import Navbar from "./Dashboard/Navbar/Navbar";
+import CreateOrder from "./Dashboard/StockManagement/CreateOrder";
+import EmployeeManagement from "./Dashboard/EmployeeManagement/EmployeeManagement";
+import StockManagement from "./Dashboard/StockManagement/StockManagement";
+import SalesHistory from "./Dashboard/SalesHistory/SalesHistory";
+import Billing from "./Dashboard/Billing/Billing";
 import "./styles.css";
 
 import React, { useEffect, useState } from "react";
