@@ -1,10 +1,11 @@
 // Dashboard.js
 import Navbar from "./Dashboard/Navbar/Navbar";
-import CreateOrder from "./Dashboard/StockManagement/CreateOrder";
 import EmployeeManagement from "./Dashboard/EmployeeManagement/EmployeeManagement";
 import StockManagement from "./Dashboard/StockManagement/StockManagement";
 import SalesHistory from "./Dashboard/SalesHistory/SalesHistory";
 import Billing from "./Dashboard/Billing/Billing";
+import Logout from "./Dashboard/Logout/Logout";
+import Profile from "./Dashboard/Profile/Profile";
 import "./styles.css";
 
 import React, { useEffect, useState } from "react";
@@ -59,8 +60,8 @@ function HeaderDashboard() {
 
 	const renderComponent = () => {
 		switch (selectedComponent) {
-			case "create-order":
-				return <CreateOrder />;
+			case "profile":
+				return <Profile />;
 			case "employee-management":
 				return <EmployeeManagement />;
 			case "stock-management":
@@ -69,6 +70,8 @@ function HeaderDashboard() {
 				return <SalesHistory />;
 			case "billing":
 				return <Billing />;
+			case "logout":
+				return <Logout />;
 			default:
 				return null;
 		}

@@ -1,22 +1,58 @@
 import React from "react";
+import {
+	BsFillPersonFill,
+	BsPersonFillGear,
+	BsFillBoxFill,
+	BsReceiptCutoff,
+} from "react-icons/bs";
+import { IoLogOutOutline } from "react-icons/io5";
+import { RiChatHistoryLine } from "react-icons/ri";
+import "./Navbar.css";
 
 const Navbar = ({ onSelectComponent }) => {
 	return (
 		<div className="navbar">
-			<button onClick={() => onSelectComponent("create-order")}>
-				Create Order
+			<button
+				onClick={() => onSelectComponent("profile")}
+				className="profile-button"
+			>
+				<span className="size">
+					<BsFillPersonFill />
+				</span>
+				<span className="size">Profile</span>
 			</button>
 			<button onClick={() => onSelectComponent("employee-management")}>
-				Employee Management
+				<span className="size">
+					<BsPersonFillGear />
+				</span>
+				<span className="size">Employees</span>
 			</button>
 			<button onClick={() => onSelectComponent("stock-management")}>
-				Stock Management
+				<span className="size">
+					<BsFillBoxFill />
+				</span>
+				<span className="size">Stocks</span>
 			</button>
 			<button onClick={() => onSelectComponent("sales-history")}>
-				Sales History
+				<span className="size">
+					<RiChatHistoryLine />
+				</span>
+				<span className="size">Sales</span>
 			</button>
 			<button onClick={() => onSelectComponent("billing")}>
-				Billing
+				<span className="size">
+					<BsReceiptCutoff />
+				</span>
+				<span className="size">Billing</span>
+			</button>
+			<button
+				className="logout-button"
+				onClick={() => onSelectComponent("logout")}
+			>
+				<span className="size">
+					<IoLogOutOutline />
+				</span>
+				<span className="size">Logout</span>
 			</button>
 		</div>
 	);
