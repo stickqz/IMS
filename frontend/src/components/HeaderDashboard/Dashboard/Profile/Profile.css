@@ -1,0 +1,43 @@
+.component-container h2 {
+	font-size: 1.5rem;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.data-entry {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 1rem;
+	margin: 8px;
+	padding: 6%;
+	background-color: rgb(181, 245, 243);
+	border-radius: 8px;
+	height: 100%;
+	gap: 100px;
+}
+
+.profile-data {
+	display: flex;
+	flex-direction: column;
+	/* align-items: center; */
+}
+
+.data-label {
+	font-weight: bold;
+}
+
+.data-value {
+	color: #007bff;
+}
+
+.close-shop {
+	background-color: rgb(255, 69, 69);
+	color: white;
+	text-align: center;
+	font: 1.5rem sans-serif;
+	margin-top: 100px;
+	padding: 20px 20px;
+	margin-left: 30%;
+	width: 200px;
+}
