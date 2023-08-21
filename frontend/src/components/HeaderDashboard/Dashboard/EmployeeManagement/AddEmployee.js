@@ -24,27 +24,27 @@ const AddEmployee = ({ onAddEmployee }) => {
 					type="text"
 					name="name"
 					placeholder="Name"
-					className="input-field"
+					className="add-employee-input-field"
 				/>
 				<input
 					type="email"
 					name="email"
 					placeholder="Email"
-					className="input-field"
+					className="add-employee-input-field"
 				/>
 				<input
 					type="password"
 					name="password"
 					placeholder="Password"
-					className="input-field"
+					className="add-employee-input-field"
 				/>
 				<input
 					type="text"
 					name="phone"
 					placeholder="Phone"
-					className="input-field"
+					className="add-employee-input-field"
 				/>
-				<button type="submit" className="add-button">
+				<button type="submit" className="add-employee-add-button">
 					Add
 				</button>
 			</form>
