@@ -1,0 +1,46 @@
+/* AddStock.css */
+.add-stock-container {
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.296);
+  margin: 0 15% 30% 20%;
+}
+.add-stock-container h2{
+  justify-self: center;
+  font-size: 20px;
+	margin-bottom: 10px;
+}
+
+.add-stock-label{
+font-style: bold;
+}
+.add-stock-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.add-stock-input-field {
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-stock-submit-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 20%;
+  margin: 0 auto;
+  box-shadow: 7px 7px 11px rgba(47, 56, 92, 0.2);
+}
+
+.add-stock-button:hover {
+  background-color: #6f89a5;
+}

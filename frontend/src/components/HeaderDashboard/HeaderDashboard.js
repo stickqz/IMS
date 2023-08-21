@@ -79,7 +79,7 @@ function HeaderDashboard() {
 
 	return (
 		<div>
-			{userData ? (
+			{/* {userData ? (
 				<div>
 					<div className="header-dashboard">
 						<div className="navbar-container">
@@ -90,7 +90,15 @@ function HeaderDashboard() {
 				</div>
 			) : (
 				<p>Loading...</p>
-			)}
+			)} */}
+			<div>
+					<div className="header-dashboard">
+						<div className="navbar-container">
+							<Navbar onSelectComponent={setSelectedComponent} />
+						</div>
+						<div className="dashboard">{renderComponent()}</div>
+					</div>
+				</div>
 		</div>
 	);
 }

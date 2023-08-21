@@ -9,40 +9,6 @@
 	display: flex;
 }
 
-.navbar {
-	width: 30vb;
-	background-color: #aefeff;
-	color: white;
-	padding: 20px;
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 1rem;
-}
-
-.navbar button {
-	display: block;
-	background: #4fbdba;
-	border: none;
-	color: white;
-	padding: 10px 15px;
-	gap: 10px;
-	width: 100%;
-	height: 10%;
-	text-align: left;
-	font-size: 16px;
-	cursor: pointer;
-	border-radius: 20px;
-	box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.24),
-		0 17px 50px 0 rgba(0, 0, 0, 0.19);
-}
-
-.navbar button:hover {
-	background-color: #072227;
-	box-shadow: none;
-}
-
 .dashboard {
 	background: #f0efef;
 	width: 70vb;
@@ -53,22 +19,16 @@
 	justify-content: center;
 	height: 100vh;
 }
-/* border: 1px solid #ccc;
-	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	background-color: #fff;
-	width: 100vb;
-	height: 80vb; */
+
 
 .component-container {
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
 	background-color: #ffffff;
-	padding: 20px;
+	padding: 25px;
 	margin-bottom: 20px;
-	width: 80%;
-	height: 80%;
+	height: 89vh;
+	width: 73.5vw;
 	align-self: center;
 }
 
@@ -77,162 +37,3 @@
 	margin-bottom: 10px;
 }
 
-.form {
-	display: flex;
-	flex-direction: column;
-}
-
-.input-field {
-	margin: 8px 0;
-	padding: 8px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-}
-
-.submit-button {
-	background-color: #007bff;
-	color: white;
-	border: none;
-	padding: 10px;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-ul {
-	list-style-type: none;
-	margin: 10px 0;
-}
-
-li {
-	margin: 5px 0;
-}
-
-.button-container {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-}
-
-.add-button,
-.edit-button,
-.remove-button,
-.generate-button {
-	background-color: #007bff;
-	color: white;
-	border: none;
-	padding: 8px 12px;
-	border-radius: 4px;
-	font-size: 1.2rem;
-	cursor: pointer;
-	box-shadow: 7px 7px 11px rgba(47, 56, 92, 0.2);
-}
-
-.add-button:hover,
-.edit-button:hover,
-.remove-button:hover,
-.generate-button:hover {
-	background-color: #6f89a5;
-	box-shadow: none;
-}
-
-.billing-info {
-	margin-top: 10px;
-	padding: 10px;
-	background-color: #f0f0f0;
-	border-radius: 4px;
-}
-
-/* styles.css */
-/* ... Your existing styles ... */
-
-.add-employee-container {
-	margin-top: 10%;
-	background-color: #f8f8f8;
-	padding: 20px;
-	border-radius: 8px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	margin-bottom: 20px;
-}
-
-.add-employee-container h2 {
-	font-size: 20px;
-	margin-bottom: 10px;
-}
-
-.add-employee-form {
-	display: flex;
-	flex-direction: column;
-}
-
-.input-field {
-	margin: 8px 0;
-	padding: 8px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-}
-
-/* styles.css */
-/* ... Your existing styles ... */
-
-.profile-container {
-	display: flex;
-	align-items: center;
-	margin-bottom: 20px;
-	position: relative;
-}
-
-.profile-image {
-	width: 20vb;
-	height: 20vh;
-	border-radius: 50%;
-	margin-right: 10px;
-	margin-left: 30%;
-}
-
-.dots-button {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 20px;
-	height: 20px;
-	cursor: pointer;
-}
-
-.dot {
-	width: 4px;
-	height: 4px;
-	background-color: #007bff;
-	border-radius: 50%;
-	margin: 2px 0;
-	transition: background-color 0.3s ease-in-out;
-}
-
-.active-dot {
-	background-color: #0056b3; /* Change color on active */
-}
-
-.profile-menu {
-	position: absolute;
-	top: 50px;
-	right: 0;
-	background-color: #a13e3e;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	border-radius: 4px;
-	display: flex;
-	flex-direction: column;
-	padding: 10px;
-	z-index: 1;
-}
-
-.profile-menu button {
-	background: none;
-	border: none;
-	padding: 5px 10px;
-	font-size: 14px;
-	cursor: pointer;
-	text-align: left;
-}
-
-/* ... Rest of your styles ... */
