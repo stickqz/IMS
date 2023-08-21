@@ -77,13 +77,14 @@ function LandingPage() {
         <div className="landing-login-form">
           <form onSubmit={handleLogin}>
             <label className="landing-name-field">Email</label>
-            <input type="text" name="email" placeholder="Enter Email" />
+            <input type="text" name="email" placeholder="Enter Email" className="landing-page-input"/>
             <br />
             <label className="landing-name-field">Password</label>
             <input
               type="password"
               name="password"
               placeholder="Enter Password"
+              className="landing-page-input"
             />
             <br />
             {loginError && <p className="landing-error">{loginError}</p>}
@@ -110,5 +111,6 @@ function LandingPage() {
     </div>
   );
 }
+
 
 export default LandingPage;
