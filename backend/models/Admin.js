@@ -18,11 +18,6 @@ const stockSchema = new Schema({
     type: Number,
     required: true,
   },
-  product_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: mongoose.Types.ObjectId, // Generates a unique ObjectId by default
-    required: true,
-  },
 });
 
 const adminSchema = new Schema({

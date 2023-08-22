@@ -153,12 +153,13 @@ router.get("/:role/profile", verifyToken, async (req, res) => {
   }
 });
 
-router.post("/admin/stock", async (req, res) => {
+router.post("/admin/stock", verifyToken, async (req, res) => {
   try {
     const { productName, productQuantity, costPrice, sellingPrice } = req.body;
 
     // Find the admin based on the user's token or any other authentication method you're using
-    const admin = await Admin.findOne(req.user.email);
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
     }
@@ -187,14 +188,88 @@ router.post("/admin/stock", async (req, res) => {
 router.get("/admin/stock", verifyToken, async (req, res) => {
   try {
     // Find the admin based on the user's token or any other authentication method you're using
-    const admin = await Admin.findOne(req.user.email);
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
+
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
     }
 
-    res.status(200).json(admin.stock);
+    // Retrieve the stock data from the admin's stock array
+    const stockData = admin.stock;
+
+    // Send the stock data as a response
+    res.status(200).json(stockData);
   } catch (error) {
     console.error("Stock Data Retrieval error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Update stock item by productName
+router.put("/admin/stock/:productName", verifyToken, async (req, res) => {
+  try {
+    const { productName } = req.params;
+    const updatedStockItem = req.body;
+
+    // Find the admin based on the user's token or any other authentication method you're using
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Find the stock item by productName
+    const stockItem = admin.stock.find(
+      (item) => item.productName === productName
+    );
+
+    if (!stockItem) {
+      return res.status(404).json({ message: "Stock item not found" });
+    }
+
+    // Update the stock item
+    Object.assign(stockItem, updatedStockItem);
+
+    // Save the admin document with the updated stock
+    await admin.save();
+
+    res.status(200).json({ message: "Stock data updated successfully" });
+  } catch (error) {
+    console.error("Stock Data Update error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+// Delete stock item by productName
+router.delete("/admin/stock/:productName", verifyToken, async (req, res) => {
+  try {
+    const { productName } = req.params;
+
+    // Find the admin based on the user's token or any other authentication method you're using
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Find the index of the stock item to be deleted by productName
+    const indexToDelete = admin.stock.findIndex(
+      (item) => item.productName === productName
+    );
+
+    if (indexToDelete === -1) {
+      return res.status(404).json({ message: "Stock item not found" });
+    }
+
+    // Remove the stock item from the admin's stock array
+    admin.stock.splice(indexToDelete, 1);
+
+    // Save the admin document with the updated stock
+    await admin.save();
+
+    res.status(200).json({ message: "Stock data deleted successfully" });
+  } catch (error) {
+    console.error("Stock Data Deletion error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
