@@ -1,6 +1,30 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const stockSchema = new Schema({
+  productName: {
+    type: String,
+    required: true,
+  },
+  productQuantity: {
+    type: Number,
+    required: true,
+  },
+  costPrice: {
+    type: Number,
+    required: true,
+  },
+  sellingPrice: {
+    type: Number,
+    required: true,
+  },
+  product_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: mongoose.Types.ObjectId, // Generates a unique ObjectId by default
+    required: true,
+  },
+});
+
 const adminSchema = new Schema({
   username: {
     type: String,
@@ -20,6 +44,7 @@ const adminSchema = new Schema({
     type: String,
     required: true,
   },
+  stock: [stockSchema],
 });
 
 const Admin = mongoose.model("Admin", adminSchema);

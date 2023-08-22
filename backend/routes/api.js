@@ -54,11 +54,12 @@ router.post("/admin/signup", async (req, res) => {
 });
 
 // Define the '/admin/employee' route for admin to create an employee
-router.post("/admin/employee", async (req, res) => {
+router.post("/admin/employee", verifyToken, async (req, res) => {
   try {
-    const { username, password, address, email, adminId } = req.body;
+    const { username, email, password, phone } = req.body;
 
-    const admin = await Admin.findById(adminId);
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
     }
@@ -76,8 +77,8 @@ router.post("/admin/employee", async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      address,
-      admin: admin._id, // Link to the admin who is creating the employee
+      phone,
+      admin: userId, // Link to the admin who is creating the employee
     });
     await newEmployee.save();
 
@@ -148,6 +149,52 @@ router.get("/:role/profile", verifyToken, async (req, res) => {
   } catch (error) {
     console.error("Profile Retrieval error:", error);
     console.error("Error Details:", error.message, error.stack);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/admin/stock", async (req, res) => {
+  try {
+    const { productName, productQuantity, costPrice, sellingPrice } = req.body;
+
+    // Find the admin based on the user's token or any other authentication method you're using
+    const admin = await Admin.findOne(req.user.email);
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Create a new stock item
+    const newStockItem = {
+      productName,
+      productQuantity,
+      costPrice,
+      sellingPrice,
+    };
+
+    // Push the new stock item to the admin's stock array
+    admin.stock.push(newStockItem);
+
+    // Save the admin document with the updated stock
+    await admin.save();
+
+    res.status(201).json({ message: "Stock data added successfully" });
+  } catch (error) {
+    console.error("Stock Data Addition error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get("/admin/stock", verifyToken, async (req, res) => {
+  try {
+    // Find the admin based on the user's token or any other authentication method you're using
+    const admin = await Admin.findOne(req.user.email);
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json(admin.stock);
+  } catch (error) {
+    console.error("Stock Data Retrieval error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });

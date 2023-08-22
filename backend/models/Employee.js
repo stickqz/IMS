@@ -16,13 +16,12 @@ const employeeSchema = new Schema({
     type: String,
     required: true,
   },
-  address: {
+  phone: {
     type: String,
     required: true,
   },
   admin: {
-    type: Schema.Types.ObjectId,
-    ref: "Admin", // Reference to the Admin model
+    type: String,
     required: true,
   },
 });
