@@ -5,41 +5,26 @@ import "./StockManagement.css";
 
 const StockManagement = () => {
   const [activeTab, setActiveTab] = useState("view");
-  const [stockData, setStockData] = useState([]);
-  const [editStockProductName, setEditStockProductName] = useState("");
-  const [editedProductQuantity, setEditedProductQuantity] = useState("");
-  const [editedCostPrice, setEditedCostPrice] = useState("");
-  const [editedSellingPrice, setEditedSellingPrice] = useState("");
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [stockData, setStockData] = useState({
+    productName: "",
+    quantity: 0,
+    editProductName: "",
+    editedProductQuantity: "",
+    editedCostPrice: "",
+    editedSellingPrice: "",
+    loading: true,
+  });
+
   const token = localStorage.getItem("token");
 
   const handleTabChange = (tab) => setActiveTab(tab);
 
-  useEffect(() => {
-    // Make a GET request to fetch stock data from the backend
-    axios
-      .get("http://localhost:5000/api/admin/stock", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include your authentication token here
-        },
-      })
-      .then((response) => {
-        setStockData(response.data);
-        console.log(response.data);
-        setLoading(false); // Update loading state when data is fetched
-      })
-      .catch((error) => {
-        console.error("Error fetching stock data:", error);
-      });
-  }, [token]);
-
   const handleSaveEdit = (productName) => {
     const updatedStockItem = {
-      productQuantity: editedProductQuantity,
-      costPrice: editedCostPrice,
-      sellingPrice: editedSellingPrice,
+      productQuantity: stockData.editedProductQuantity,
+      costPrice: stockData.editedCostPrice,
+      sellingPrice: stockData.editedSellingPrice,
     };
-    console.log(updatedStockItem);
 
     // Make a PUT request to update the stock item in the backend
     axios
@@ -54,13 +39,16 @@ const StockManagement = () => {
       )
       .then(() => {
         // Update the local state with the edited data
-        const updatedData = stockData.map((stockItem) =>
+        const updatedData = stockData.stockData.map((stockItem) =>
           stockItem.productName === productName
             ? { ...stockItem, ...updatedStockItem }
             : stockItem
         );
-        setStockData(updatedData);
-        setEditStockProductName(null);
+        setStockData({
+          ...stockData,
+          stockData: updatedData,
+          editProductName: null,
+        });
       })
       .catch((error) => {
         console.error("Error updating stock data:", error);
@@ -77,25 +65,49 @@ const StockManagement = () => {
       })
       .then(() => {
         // Remove the deleted item from the local state
-        const updatedData = stockData.filter(
+        const updatedData = stockData.stockData.filter(
           (stockItem) => stockItem.productName !== productName
         );
-        setStockData(updatedData);
+        setStockData({ ...stockData, stockData: updatedData });
       })
       .catch((error) => {
         console.error("Error deleting stock data:", error);
       });
   };
+
   const handleCancelEdit = () => {
-    setEditStockProductName(null);
-    setEditedProductQuantity("");
-    setEditedCostPrice("");
-    setEditedSellingPrice("");
+    setStockData({
+      ...stockData,
+      editProductName: null,
+      editedProductQuantity: "",
+      editedCostPrice: "",
+      editedSellingPrice: "",
+    });
   };
 
   const handleEdit = (productName) => {
-    setEditStockProductName(productName);
+    setStockData({ ...stockData, editProductName: productName });
   };
+
+  useEffect(() => {
+    // Make a GET request to fetch stock data from the backend
+    axios
+      .get("http://localhost:5000/api/admin/stock", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include your authentication token here
+        },
+      })
+      .then((response) => {
+        setStockData({
+          ...stockData,
+          stockData: response.data,
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching stock data:", error);
+      });
+  }, [token]);
 
   return (
     <div className="component-container">
@@ -123,7 +135,7 @@ const StockManagement = () => {
       {activeTab === "view" && (
         <div>
           <h3>Stock List</h3>
-          {loading ? (
+          {stockData.loading ? (
             <p>Loading data...</p> // Display a loading message while fetching data
           ) : (
             <table className="stock-list-table">
@@ -137,17 +149,20 @@ const StockManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {stockData.map((stockItem) => (
+                {stockData.stockData.map((stockItem) => (
                   <tr key={stockItem.productName}>
                     <td>{stockItem.productName}</td>
                     <td>
-                      {stockItem.productName === editStockProductName ? (
+                      {stockItem.productName === stockData.editProductName ? (
                         <input
                           className="stock-edit-field"
                           type="text"
-                          value={editedProductQuantity}
+                          value={stockData.editedProductQuantity}
                           onChange={(e) =>
-                            setEditedProductQuantity(e.target.value)
+                            setStockData({
+                              ...stockData,
+                              editedProductQuantity: e.target.value,
+                            })
                           }
                         />
                       ) : (
@@ -155,25 +170,33 @@ const StockManagement = () => {
                       )}
                     </td>
                     <td>
-                      {stockItem.productName === editStockProductName ? (
+                      {stockItem.productName === stockData.editProductName ? (
                         <input
                           className="stock-edit-field"
                           type="text"
-                          value={editedCostPrice}
-                          onChange={(e) => setEditedCostPrice(e.target.value)}
+                          value={stockData.editedCostPrice}
+                          onChange={(e) =>
+                            setStockData({
+                              ...stockData,
+                              editedCostPrice: e.target.value,
+                            })
+                          }
                         />
                       ) : (
                         stockItem.costPrice
                       )}
                     </td>
                     <td>
-                      {stockItem.productName === editStockProductName ? (
+                      {stockItem.productName === stockData.editProductName ? (
                         <input
                           className="stock-edit-field"
                           type="text"
-                          value={editedSellingPrice}
+                          value={stockData.editedSellingPrice}
                           onChange={(e) =>
-                            setEditedSellingPrice(e.target.value)
+                            setStockData({
+                              ...stockData,
+                              editedSellingPrice: e.target.value,
+                            })
                           }
                         />
                       ) : (
@@ -181,7 +204,7 @@ const StockManagement = () => {
                       )}
                     </td>
                     <td>
-                      {stockItem.productName === editStockProductName ? (
+                      {stockItem.productName === stockData.editProductName ? (
                         <div className="stock-edited-button">
                           <button
                             className="stock-save-button"

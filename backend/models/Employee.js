@@ -20,6 +20,10 @@ const employeeSchema = new Schema({
     type: String,
     required: true,
   },
+  salary: {
+    type: String,
+    required: true,
+  },
   admin: {
     type: String,
     required: true,

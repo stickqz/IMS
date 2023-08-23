@@ -13,6 +13,7 @@ const AddEmployee = ({ onAddEmployee }) => {
       email: formData.get("email"),
       password: formData.get("password"),
       phone: formData.get("phone"),
+      salary: formData.get("salary"),
     };
 
     try {
@@ -70,6 +71,12 @@ const AddEmployee = ({ onAddEmployee }) => {
           type="text"
           name="phone"
           placeholder="Phone"
+          className="add-employee-input-field"
+        />
+        <input
+          type="text"
+          name="salary"
+          placeholder="Salary"
           className="add-employee-input-field"
         />
         <button type="submit" className="add-employee-add-button">

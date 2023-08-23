@@ -1,70 +1,137 @@
-// EmployeeManagement.js
 import React, { useState, useEffect } from "react";
-import "./EmployeeManagement.css";
+import axios from "axios";
 import AddEmployee from "./AddEmployee";
+import DeleteConfirmation from "./DeleteConfirmation";
+import SaveConfirmation from "./SaveConfirmation";
+import "./EmployeeManagement.css";
 
 const EmployeeManagement = () => {
   const [activeTab, setActiveTab] = useState("view");
   const [employeeData, setEmployeeData] = useState([]);
-  const [editEmployeeId, setEditEmployeeId] = useState(null);
-  const [editedName, setEditedName] = useState("");
-  const [editedRole, setEditedRole] = useState("");
-  const [editedSalary, setEditedSalary] = useState("");
+  const [editEmployeeemail, setEditEmployeeemail] = useState(null);
+  const [editedEmployee, setEditedEmployee] = useState({
+    username: "",
+    email: "",
+    phone: "",
+    salary: "",
+  });
+  const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const token = localStorage.getItem("token");
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  // Example dummy employee data
-  const dummyEmployeeData = [
-    { id: 1, name: "John Doe", role: "xyxx", salary: "xxxx" },
-    { id: 2, name: "Jane Smith", role: "xxxxxxx", salary: "xxxx" },
-    { id: 3, name: "Michael Johnson", role: "xxxxxx", salary: "xxxxxx" },
-  ];
-
-  useEffect(() => {
-    setEmployeeData(dummyEmployeeData);
-  }, []);
-
-  const handleEdit = (id) => {
-    const employeeToEdit = employeeData.find((employee) => employee.id === id);
+  const handleEdit = (email) => {
+    const employeeToEdit = employeeData.find(
+      (employee) => employee.email === email
+    );
     if (employeeToEdit) {
-      setEditEmployeeId(id);
-      setEditedName(employeeToEdit.name);
-      setEditedRole(employeeToEdit.role);
-      setEditedSalary(employeeToEdit.salary);
+      setEditEmployeeemail(email);
+      setEditedEmployee({ ...employeeToEdit });
     }
   };
 
-  const handleSaveEdit = (id) => {
-    const updatedData = employeeData.map((employee) =>
-      employee.id === id
-        ? {
-            ...employee,
-            name: editedName,
-            role: editedRole,
-            salary: editedSalary,
-          }
-        : employee
-    );
-    setEmployeeData(updatedData);
-    setEditEmployeeId(null);
-    setEditedName("");
-    setEditedRole("");
-    setEditedSalary("");
-  };
-
   const handleCancelEdit = () => {
-    setEditEmployeeId(null);
-    setEditedName("");
-    setEditedRole("");
-    setEditedSalary("");
+    setEditEmployeeemail(null);
+    setEditedEmployee({
+      username: "",
+      email: "",
+      phone: "",
+      salary: "",
+    });
   };
 
-  const handleDelete = (id) => {
-    const updatedData = employeeData.filter((employee) => employee.id !== id);
-    setEmployeeData(updatedData);
+  const handleDeleteConfirmation = (email) => {
+    setShowDeleteConfirmation(true);
+    setItemToDelete(email);
   };
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(false);
+    setItemToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    axios
+      .delete(`http://localhost:5000/api/admin/employees/${itemToDelete}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        const updatedData = employeeData.filter(
+          (employee) => employee.email !== itemToDelete
+        );
+        setEmployeeData(updatedData);
+        setShowDeleteConfirmation(false);
+        setItemToDelete(null);
+      })
+      .catch((error) => {
+        console.error("Error deleting employee data:", error);
+      });
+  };
+
+  const handleSaveConfirmation = (email) => {
+    setShowSaveConfirmation(true);
+    setEditEmployeeemail(email); // Set the email of the employee being edited for saving
+  };
+
+  const handleConfirmSave = () => {
+    const updatedEmployee = {
+      username: editedEmployee.username,
+      email: editedEmployee.email,
+      phone: editedEmployee.phone,
+      salary: editedEmployee.salary,
+    };
+    console.log(updatedEmployee);
+    axios
+      .put(
+        `http://localhost:5000/api/admin/employees/${editEmployeeemail}`,
+        updatedEmployee,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        const updatedData = employeeData.map((employee) =>
+          employee.email === editEmployeeemail
+            ? { ...updatedEmployee, email: editEmployeeemail }
+            : employee
+        );
+
+        setEmployeeData(updatedData);
+        setEditEmployeeemail(null);
+        setEditedEmployee({
+          username: "",
+          email: "",
+          phone: "",
+          salary: "",
+        });
+        setShowSaveConfirmation(false);
+      })
+      .catch((error) => {
+        console.error("Error updating employee data:", error);
+      });
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/admin/employees/names", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setEmployeeData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching employee data:", error);
+      });
+  }, [token]);
 
   return (
     <div className="component-container">
@@ -72,13 +139,17 @@ const EmployeeManagement = () => {
       <div className="employee-button-container">
         <button
           onClick={() => handleTabChange("view")}
-          className={`employee-tab-button ${activeTab === "view" ? "active" : ""}`}
+          className={`employee-tab-button ${
+            activeTab === "view" ? "active" : ""
+          }`}
         >
           View Employees
         </button>
         <button
           onClick={() => handleTabChange("add")}
-          className={`employee-tab-button ${activeTab === "add" ? "active" : ""}`}
+          className={`employee-tab-button ${
+            activeTab === "add" ? "active" : ""
+          }`}
         >
           Add Employee
         </button>
@@ -90,90 +161,144 @@ const EmployeeManagement = () => {
       )}
       {activeTab === "view" && (
         <div>
-          <h3 >Employee List</h3>
-          <table className="employee-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Salary</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employeeData.map((employee) => (
-                <tr key={employee.id}>
-                  <td>
-                    {employee.id === editEmployeeId ? (
-                      <input className="employee-edit-field"
-                        type="text"
-                        value={editedName}
-                        onChange={(e) => setEditedName(e.target.value)}
-                      />
-                    ) : (
-                      employee.name
-                    )}
-                  </td>
-                  <td>
-                    {employee.id === editEmployeeId ? (
-                      <input className="employee-edit-field"
-                        type="text"
-                        value={editedRole}
-                        onChange={(e) => setEditedRole(e.target.value)}
-                      />
-                    ) : (
-                      employee.role
-                    )}
-                  </td>
-                  <td>
-                    {employee.id === editEmployeeId ? (
-                      <input className="employee-edit-field"
-                        type="text"
-                        value={editedSalary}
-                        onChange={(e) => setEditedSalary(e.target.value)}
-                      />
-                    ) : (
-                      employee.salary
-                    )}
-                  </td>
-                  <td>
-                    {employee.id === editEmployeeId ? (
-                      <div className="employee-edited-button">
-                        <button
-                          className="employee-save-button"
-                          onClick={() => handleSaveEdit(employee.id)}
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="employee-cancel-button"
-                          onClick={() => handleCancelEdit()}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <button
-                          className="employee-edit-button"
-                          onClick={() => handleEdit(employee.id)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="employee-delete-button"
-                          onClick={() => handleDelete(employee.id)}
-                        >
-                          Delete
-                        </button>
-                      </>
-                    )}
-                  </td>
+          <h3>Employee List</h3>
+          <div className="employee-table-container">
+            <table className="employee-table">
+              <thead>
+                <tr>
+                  <th className="employee-table-header">Name</th>
+                  <th className="employee-table-header">Email</th>
+                  <th className="employee-table-header">Phone</th>
+                  <th className="employee-table-header">Salary</th>
+                  <th className="employee-table-header">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {employeeData.map((employee) => (
+                  <tr key={employee.email}>
+                    <td>
+                      {employee.email === editEmployeeemail ? (
+                        <input
+                          className="employee-edit-field"
+                          type="text"
+                          value={editedEmployee.username}
+                          onChange={(e) =>
+                            setEditedEmployee({
+                              ...editedEmployee,
+                              username: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        employee.username
+                      )}
+                    </td>
+                    <td>
+                      {employee.email === editEmployeeemail ? (
+                        <input
+                          className="employee-edit-field"
+                          type="text"
+                          value={editedEmployee.email}
+                          onChange={(e) =>
+                            setEditedEmployee({
+                              ...editedEmployee,
+                              email: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        employee.email
+                      )}
+                    </td>
+                    <td>
+                      {employee.email === editEmployeeemail ? (
+                        <input
+                          className="employee-edit-field"
+                          type="text"
+                          value={editedEmployee.phone}
+                          onChange={(e) =>
+                            setEditedEmployee({
+                              ...editedEmployee,
+                              phone: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        employee.phone
+                      )}
+                    </td>
+                    <td>
+                      {employee.email === editEmployeeemail ? (
+                        <input
+                          className="employee-edit-field"
+                          type="text"
+                          value={editedEmployee.salary}
+                          onChange={(e) =>
+                            setEditedEmployee({
+                              ...editedEmployee,
+                              salary: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        employee.salary
+                      )}
+                    </td>
+                    <td>
+                      {employee.email === editEmployeeemail ? (
+                        <div className="employee-edited-button">
+                          <button
+                            className="employee-save-button"
+                            onClick={() =>
+                              handleSaveConfirmation(employee.email)
+                            }
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="employee-cancel-button"
+                            onClick={() => handleCancelEdit()}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <button
+                            className="employee-edit-button"
+                            onClick={() => handleEdit(employee.email)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="employee-delete-button"
+                            onClick={() =>
+                              handleDeleteConfirmation(employee.email)
+                            }
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+      )}
+      {showSaveConfirmation && (
+        <SaveConfirmation
+          onSaveConfirmed={() => handleConfirmSave()}
+          onCancel={() => setShowSaveConfirmation(false)}
+        />
+      )}
+      {showDeleteConfirmation && (
+        <DeleteConfirmation
+          onDelete={() => handleConfirmDelete()}
+          onCancel={() => handleCancelDelete()}
+        />
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-/* EmployeeManagement.css */
+
 * {
 	margin: 0;
 	padding: 0;
@@ -10,9 +10,7 @@ body {
 }
 
 h3 {
-
 	margin-left: 10%;
-
 }
 
 .employee-header-dashboard {
@@ -34,13 +32,13 @@ h3 {
 	font-size: 24px;
 	margin-top: 5%;
 	display: inline-flex;
-	align-items: center; 
+	align-items: center;
 	margin-bottom: 5%;
-	background: #0056b3;
-	padding: 10px 20px; 
-	border-radius: 5px; 
-	color: white; 
-	width:99%;
+	background: #009879; /* Updated color */
+	padding: 10px 20px;
+	border-radius: 5px;
+	color: white;
+	width: 99%;
 }
 
 .employee-button-container {
@@ -68,27 +66,45 @@ h3 {
 	color: #fff;
 }
 
-.employee-table {
-	width: 80%;
-	border-collapse: collapse;
+.employee-table-container {
+	max-height: 40vh;
+	overflow: auto;
 	margin-top: 20px;
-	margin-left: 10%;
+	margin-left: 5%;
+	margin-right:5%
+	
 }
 
-.employee-table th,
+.employee-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9em;
+	font-family: sans-serif;
+	min-width: 400px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	table-layout: fixed;
+	
+}
+
+.employee-table-header {
+	background-color: #009879;
+	color: #ffffff;
+	text-align: left;
+	padding: 12px 15px;
+}
+
 .employee-table td {
+	padding: 12px 15px;
 	border: 1px solid #ccc;
-	padding: 8px;
 	text-align: left;
 }
 
-.employee-table th {
-	background-color: #f0f0f0;
+.employee-table tbody tr {
+	border-bottom: 1px solid #dddddd;
 }
 
-
 .employee-cancel-button,
-.employee-save-button{
+.employee-save-button {
 	padding: 5px 10px;
 	border: none;
 	border-radius: 3px;
@@ -100,13 +116,12 @@ h3 {
 	width: 70px;
 	margin-left: 5px;
 	text-align: center;
-	
 }
+
 .employee-save-button:hover,
 .employee-cancel-button:hover {
 	background-color: #fd864ad0;
 }
-
 
 .employee-edit-button,
 .employee-delete-button {
@@ -119,7 +134,6 @@ h3 {
 	font-size: 14px;
 	display: inline-block;
 	width: 70px;
-	
 	text-align: center;
 }
 
@@ -131,23 +145,38 @@ h3 {
 .employee-edit-button + .employee-delete-button {
 	margin-left: 5px;
 }
-.employee-edit-field{
+
+.employee-edit-field {
 	margin: 8px 0;
 	padding: 6px;
 	border: 1px solid #a88989;
 	border-radius: 4px;
 }
+
 .add-employee-animation {
 	animation: slideUp 0.5s ease-in-out;
-  }
-  
-  @keyframes slideUp {
+}
+
+.employee-table-container::-webkit-scrollbar {
+	width: 6px;
+}
+
+.employee-table-container::-webkit-scrollbar-thumb {
+	background-color: #40f0c4;
+	border-radius: 4px;
+}
+
+.employee-table-container::-webkit-scrollbar-thumb:hover {
+	background-color: #579e8c;
+}
+
+@keyframes slideUp {
 	from {
-	  opacity: 0;
-	  transform: translateY(20px);
+		opacity: 0;
+		transform: translateY(20px);
 	}
 	to {
-	  opacity: 1;
-	  transform: translateY(0);
+		opacity: 1;
+		transform: translateY(0);
 	}
-  }
+}

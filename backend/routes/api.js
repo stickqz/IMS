@@ -56,7 +56,7 @@ router.post("/admin/signup", async (req, res) => {
 // Define the '/admin/employee' route for admin to create an employee
 router.post("/admin/employee", verifyToken, async (req, res) => {
   try {
-    const { username, email, password, phone } = req.body;
+    const { username, email, password, phone, salary } = req.body;
 
     const userId = req.user.email;
     const admin = await Admin.findOne({ email: userId });
@@ -78,6 +78,7 @@ router.post("/admin/employee", verifyToken, async (req, res) => {
       email,
       password: hashedPassword,
       phone,
+      salary,
       admin: userId, // Link to the admin who is creating the employee
     });
     await newEmployee.save();
@@ -270,6 +271,191 @@ router.delete("/admin/stock/:productName", verifyToken, async (req, res) => {
     res.status(200).json({ message: "Stock data deleted successfully" });
   } catch (error) {
     console.error("Stock Data Deletion error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Get all employee names
+router.get("/admin/employees/names", verifyToken, async (req, res) => {
+  try {
+    // Find the admin based on the user's token or any other authentication method you're using
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Fetch only the employees whose admin email matches the received email
+    const employeeNames = await Employee.find({ admin: userId });
+
+    res.status(200).json(employeeNames);
+  } catch (error) {
+    console.error("Error fetching employee names:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Update employee information by employeeId
+router.put("/admin/employees/:employeeemail", verifyToken, async (req, res) => {
+  try {
+    const { employeeemail } = req.params;
+    const updatedEmployeeInfo = req.body;
+
+    // Find the admin based on the user's token or any other authentication method you're using
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Find the employee by email
+    const employee = await Employee.findOne({ email: employeeemail });
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    // Update the employee information
+    Object.assign(employee, updatedEmployeeInfo);
+
+    // Save the employee document with the updated information
+    await employee.save();
+
+    res
+      .status(200)
+      .json({ message: "Employee information updated successfully" });
+  } catch (error) {
+    console.error("Employee Information Update error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete an employee by employeeId
+router.delete(
+  "/admin/employees/:employeeemail",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { employeeemail } = req.params;
+
+      // Find the employee by email
+      const employee = await Employee.findOne({ email: employeeemail });
+
+      if (!employee) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+
+      // Delete the employee document
+      await Employee.deleteOne({ email: employeeemail });
+
+      res.status(200).json({ message: "Employee deleted successfully" });
+    } catch (error) {
+      console.error("Employee Deletion error:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// Check product availability
+router.post(
+  "/admin/check-product-availability",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { productName, desiredQuantity } = req.body;
+
+      // Find the admin based on the user's token or any other authentication method you're using
+      const userId = req.user.email;
+      const admin = await Admin.findOne({ email: userId });
+      if (!admin) {
+        return res.status(400).json({ message: "Admin not found" });
+      }
+
+      // Find the product by product name
+      const product = admin.stock.find(
+        (item) => item.productName === productName
+      );
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      // Check if the desired quantity is less than or equal to the available quantity
+      if (desiredQuantity <= product.productQuantity) {
+        res.status(200).json({ message: "Product is available" });
+      } else {
+        res.status(400).json({
+          message: "Desired quantity is greater than available quantity",
+        });
+      }
+    } catch (error) {
+      console.error("Error checking product availability:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+// Edit product quantities for multiple products and record sales history
+router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
+  try {
+    const { products } = req.body;
+
+    // Find the admin based on the user's token or any other authentication method you're using
+    const userId = req.user.email;
+    const admin = await Admin.findOne({ email: userId });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Create an array to store sales history records
+    const salesHistoryRecords = [];
+
+    // Iterate through the list of products to edit
+    for (const productInfo of products) {
+      const { productName, quantityToSubtract } = productInfo;
+
+      // Find the product by name
+      const product = admin.stock.find(
+        (item) => item.productName === productName
+      );
+
+      if (!product) {
+        return res
+          .status(404)
+          .json({ message: `Product not found: ${productName}` });
+      }
+
+      // Subtract the desired quantity from the available quantity
+      product.productQuantity -= quantityToSubtract;
+
+      // If the product quantity becomes zero or negative, remove the product
+      if (product.productQuantity <= 0) {
+        admin.stock.pull(product);
+      }
+
+      // Create a sales history record
+      const salesRecord = {
+        productName: productName,
+        productQuantity: quantityToSubtract,
+        costPrice: product.costPrice,
+        sellingPrice: product.sellingPrice,
+      };
+
+      // Push the sales record into the sales history array
+      salesHistoryRecords.push(salesRecord);
+    }
+
+    // Save the admin document with the updated product quantities
+    await admin.save();
+
+    // Add the sales history records to the admin's salesHistory array
+    admin.salesHistory.push(...salesHistoryRecords);
+    await admin.save();
+
+    res
+      .status(200)
+      .json({ message: "Product quantities updated successfully" });
+  } catch (error) {
+    console.error("Error editing product quantities:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
