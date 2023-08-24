@@ -82,6 +82,8 @@ router.post("/admin/employee", verifyToken, async (req, res) => {
       admin: userId, // Link to the admin who is creating the employee
     });
     await newEmployee.save();
+    
+    res.setHeader("Content-Type", "application/json");
 
     res.status(201).json({ message: "Employee registered successfully" });
   } catch (error) {

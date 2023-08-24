@@ -56,13 +56,13 @@ h3 {
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-	background-color: #bfe0f9;
+	background-color: #C4FCFC;
 	color: #242222;
 	font-size: 16px;
 }
 
 .employee-tab-button.active {
-	background-color: #007bff;
+	background-color: #37b5a3;
 	color: #fff;
 }
 
@@ -129,8 +129,8 @@ h3 {
 	border: none;
 	border-radius: 3px;
 	cursor: pointer;
-	background-color: #007bff;
-	color: #fff;
+	background-color: #C4FCFC;
+	color: black;
 	font-size: 14px;
 	display: inline-block;
 	width: 70px;
@@ -139,7 +139,7 @@ h3 {
 
 .employee-edit-button:hover,
 .employee-delete-button:hover {
-	background-color: #0056b3;
+	background-color: #37b5a3;
 }
 
 .employee-edit-button + .employee-delete-button {

@@ -10,58 +10,75 @@
 }
 
 .stock-component-heading {
-  font-size: 24px;
+	font-size: 24px;
 	margin-top: 5%;
 	display: inline-flex;
-	align-items: center; 
+	align-items: center;
 	margin-bottom: 5%;
-	background: #0056b3;
-	padding: 10px 20px; 
-	border-radius: 5px; 
-	color: white; 
-	width:99%;
+	background: #009879; /* Updated color */
+	padding: 10px 20px;
+	border-radius: 5px;
+	color: white;
+	width: 99%;
 }
 
 .stock-button-container {
-  display: flex;
+	display: flex;
 	justify-content: center;
 	margin-bottom: 20px;
+	margin-top: 5%;
 	margin-left: 10%;
 	gap: 5%;
 	margin-right: 10%;
 }
 
 .stock-tab-button {
-  padding: 10px 15px;
+	padding: 10px 15px;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-	background-color: #bfe0f9;
+	background-color: #C4FCFC;
 	color: #242222;
 	font-size: 16px;
 }
+.stock-table-container{
+	max-height: 40vh;
+	overflow: auto;
+	margin-top: 20px;
+	margin-left: 5%;
+	margin-right:5%
+}
 
 .stock-tab-button.active {
-    background-color: #007bff;
+    background-color: #37b5a3;
     color: #fff;
 }
 
 .stock-list-table {
-    width:80%;
-    border-collapse: collapse;
-    margin-top:20px;
-    margin-left: 10%;
+    width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9em;
+	font-family: sans-serif;
+	min-width: 400px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	table-layout: fixed;
 }
 
-.stock-list-table th,
+
 .stock-list-table td {
-    border:1px solid #ccc;
-    padding:8px;
-    text-align:left;
+    padding: 12px 15px;
+	border: 1px solid #ccc;
+	text-align: left;
 }
 
 .stock-list-table th {
-    background-color:#f0f0f0;
+    background-color: #009879;
+	color: #ffffff;
+	text-align: left;
+	padding: 12px 15px;
+}
+.stock-list-table tbody tr {
+	border-bottom: 1px solid #dddddd;
 }
 
 .stock-cancel-button,
@@ -70,8 +87,8 @@
 	border: none;
 	border-radius: 3px;
 	cursor: pointer;
-	background-color: #fd864a;
-	color: #fff;
+	background-color: #C4FCFC;
+	color: black;
 	font-size: 14px;
 	display: inline-block;
 	width: 70px;
@@ -81,7 +98,7 @@
 
 .stock-save-button:hover,
 .stock-cancel-button:hover {
-    background-color:#fd864ad0
+    background-color:#37b5a3;
 }
 
 .stock-edit-button,
@@ -90,8 +107,8 @@
 	border: none;
 	border-radius: 3px;
 	cursor: pointer;
-	background-color: #007bff;
-	color: #fff;
+	background-color: #C4FCFC;
+	color:black;
 	font-size: 14px;
 	display: inline-block;
 	width: 70px;
@@ -101,18 +118,29 @@
 
 .stock-edit-button:hover,
 .stock-delete-button:hover {
-    background-color:#0056b3;
+    background-color:#37b5a3;
 }
 .stock-edit-button + .stock-delete-button {
 	margin-left: 5px;
 }
+.stock-table-container::-webkit-scrollbar {
+	width: 6px;
+}
+
+.stock-table-container::-webkit-scrollbar-thumb {
+	background-color: #40f0c4;
+	border-radius: 4px;
+}
+
+.stock-table-container::-webkit-scrollbar-thumb:hover {
+	background-color: #579e8c;
+}
 
 .stock-edit-field {
-   margin-top:-8px; 
-   padding-left:-6px; 
-   border:none; 
-   border-bottom:solid #a88989; 
-   outline:none; 
+	margin: 8px 0;
+	padding: 6px;
+	border: 1px solid #a88989;
+	border-radius: 4px;; 
 }
 .add-stock-animation {
 	animation: slideUp 0.5s ease-in-out;

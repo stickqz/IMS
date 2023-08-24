@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddEmployee from "./AddEmployee";
-import DeleteConfirmation from "./DeleteConfirmation";
-import SaveConfirmation from "./SaveConfirmation";
+import DeleteConfirmation from "./DeleteConfirmation/DeleteConfirmation";
+import SaveConfirmation from "./SaveConfirmation/SaveConfirmation";
 import "./EmployeeManagement.css";
 
 const EmployeeManagement = () => {
