@@ -1,4 +1,3 @@
-
 h2 {
 	text-align: center;
 }
@@ -74,9 +73,7 @@ h2 {
 	text-align: left;
 }
 
-.billing-table th {
-	padding: 12px 15px;
-}
+.billing-table th,
 .billing-table td {
 	padding: 12px 15px;
 }
@@ -102,11 +99,6 @@ h2 {
 
 .billing-table tbody tr:last-of-type {
 	border-bottom: 2px solid #009879;
-}
-
-.billing-table tbody tr.active-row {
-	font-weight: bold;
-	color: #009879;
 }
 
 table button {
