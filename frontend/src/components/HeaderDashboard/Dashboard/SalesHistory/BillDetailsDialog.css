@@ -1,0 +1,59 @@
+/* BillDetailsDialog.css */
+
+.dialog-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(163, 163, 163, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dialog-content {
+	background-color: white;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	height: 60%;
+}
+
+.close-button {
+	border-radius: 3px;
+	cursor: pointer;
+	margin-bottom: 10px;
+	padding: 8px 10px;
+	background-color: #fa5d5d;
+	color: #000000;
+	border: none;
+	font-size: 1.15rem;
+	margin-left: 80%;
+}
+
+.close-button:hover {
+	background-color: rgb(255, 0, 0);
+}
+
+.bill-details-table {
+	width: 100%;
+	border-collapse: collapse;
+	max-height: 300px;
+	overflow-y: scroll;
+}
+
+.bill-details-table th,
+.bill-details-table td {
+	padding: 8px 12px;
+	border-bottom: 1px solid #ddd;
+}
+
+.bill-details-table th {
+	background-color: #f2f2f2;
+}
+
+.bill-details-table tfoot td {
+	text-align: right;
+	font-weight: bold;
+}
