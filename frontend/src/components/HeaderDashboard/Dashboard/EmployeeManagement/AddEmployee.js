@@ -5,7 +5,7 @@ const AddEmployee = ({ onAddEmployee }) => {
   const token = localStorage.getItem("token");
 
   const initialState = {
-    name: "",
+    username: "",
     email: "",
     password: "",
     phone: "",
@@ -13,14 +13,19 @@ const AddEmployee = ({ onAddEmployee }) => {
   };
 
   const [employeeData, setEmployeeData] = useState(initialState);
-  const [message, setMessage] = useState(""); // State for displaying messages
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+
+  const resetForm = () => {
+    setEmployeeData(initialState);
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
     const newEmployeeData = {
-      username: formData.get("name"),
+      username: formData.get("username"),
       email: formData.get("email"),
       password: formData.get("password"),
       phone: formData.get("phone"),
@@ -37,28 +42,20 @@ const AddEmployee = ({ onAddEmployee }) => {
         body: JSON.stringify(newEmployeeData),
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
-        const responseData = await response.json();
-        console.log("Response status:", response.status);
-        onAddEmployee(responseData);
-
-        // Show success message
-        setMessage("New employee added successfully!");
-
-        // Clear the form fields
-        setEmployeeData(initialState);
+        setMessage(responseData.message);
+        setMessageType("success");
+        resetForm();
       } else {
-        const errorData = await response.json();
-        console.error("Error:", errorData);
-
-        // Show error message
-        setMessage("An error occurred while adding the employee.");
+        setMessage(responseData.message);
+        setMessageType("error");
       }
     } catch (error) {
       console.error("Network error:", error);
-
-      // Show network error message
-      setMessage("Network error occurred. Please try again.");
+      setMessage("Network error");
+      setMessageType("error");
     }
   };
 
@@ -73,14 +70,14 @@ const AddEmployee = ({ onAddEmployee }) => {
   return (
     <div className="add-employee-container">
       <h2>Add Employee</h2>
-      {message && <p className={message.startsWith("Error") ? "error-message" : "success-message"}>{message}</p>}
+      {message && <div className={`message ${messageType}`}>{message}</div>}
       <form onSubmit={submitHandler} className="add-employee-form">
         <input
           type="text"
-          name="name"
+          name="username"
           placeholder="Name"
           className="add-employee-input-field"
-          value={employeeData.name}
+          value={employeeData.username}
           onChange={inputChangeHandler}
         />
         <input

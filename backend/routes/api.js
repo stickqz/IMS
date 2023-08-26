@@ -82,13 +82,13 @@ router.post("/admin/employee", verifyToken, async (req, res) => {
       admin: userId, // Link to the admin who is creating the employee
     });
     await newEmployee.save();
-    
+
     res.setHeader("Content-Type", "application/json");
 
     res.status(201).json({ message: "Employee registered successfully" });
   } catch (error) {
     console.error("Employee Creation error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Incomplete Fields" });
   }
 });
 
@@ -165,6 +165,15 @@ router.post("/admin/stock", verifyToken, async (req, res) => {
     const admin = await Admin.findOne({ email: userId });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
+    }
+
+    const existingstock = admin.stock.find(
+      (item) => item.productName === productName
+    );
+    if (existingstock) {
+      return res
+        .status(400)
+        .json({ message: "Stock with this name already exists" });
     }
 
     // Create a new stock item
