@@ -18,7 +18,8 @@
 }
 
 .heading {
-	font-size: 3rem; /* Increase font size by 20% */
+	font-size: 3rem; 
+	margin-bottom: 24px;/* Increase font size by 20% */
 }
 
 .landing-secondhalf {

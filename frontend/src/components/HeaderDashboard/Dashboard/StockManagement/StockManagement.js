@@ -14,6 +14,7 @@ const StockManagement = () => {
     editedSellingPrice: "",
     loading: true,
   });
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -25,7 +26,7 @@ const StockManagement = () => {
       costPrice: stockData.editedCostPrice,
       sellingPrice: stockData.editedSellingPrice,
     };
-
+  
     // Make a PUT request to update the stock item in the backend
     axios
       .put(
@@ -33,22 +34,26 @@ const StockManagement = () => {
         updatedStockItem,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include your authentication token here
+            Authorization: `Bearer ${token}`,
           },
         }
       )
       .then(() => {
         // Update the local state with the edited data
-        const updatedData = stockData.stockData.map((stockItem) =>
+        const updatedStockData = stockData.stockData.map((stockItem) =>
           stockItem.productName === productName
             ? { ...stockItem, ...updatedStockItem }
             : stockItem
         );
         setStockData({
           ...stockData,
-          stockData: updatedData,
+          stockData: updatedStockData,
           editProductName: null,
+          editedProductQuantity: "",
+          editedCostPrice: "",
+          editedSellingPrice: "",
         });
+        setEditingProduct(null);
       })
       .catch((error) => {
         console.error("Error updating stock data:", error);
@@ -76,6 +81,7 @@ const StockManagement = () => {
   };
 
   const handleCancelEdit = () => {
+    setEditingProduct(null); // Clear the editingProduct state
     setStockData({
       ...stockData,
       editProductName: null,
@@ -84,11 +90,24 @@ const StockManagement = () => {
       editedSellingPrice: "",
     });
   };
+  
 
   const handleEdit = (productName) => {
-    setStockData({ ...stockData, editProductName: productName });
+    const selectedStockItem = stockData.stockData.find(
+      (stockItem) => stockItem.productName === productName
+    );
+  
+    if (selectedStockItem) {
+      setStockData({
+        ...stockData,
+        editProductName: productName,
+        editedProductQuantity: selectedStockItem.productQuantity,
+        editedCostPrice: selectedStockItem.costPrice,
+        editedSellingPrice: selectedStockItem.sellingPrice,
+      });
+      setEditingProduct(productName);
+    }
   };
-
   useEffect(() => {
     // Make a GET request to fetch stock data from the backend
     axios
@@ -154,7 +173,7 @@ const StockManagement = () => {
                     <tr key={stockItem.productName}>
                       <td>{stockItem.productName}</td>
                       <td>
-                        {stockItem.productName === stockData.editProductName ? (
+                        {editingProduct === stockItem.productName ? (
                           <input
                             className="stock-edit-field"
                             type="text"
@@ -175,7 +194,7 @@ const StockManagement = () => {
                         )}
                       </td>
                       <td>
-                        {stockItem.productName === stockData.editProductName ? (
+                        {editingProduct === stockItem.productName ? (
                           <input
                             className="stock-edit-field"
                             type="text"
@@ -196,7 +215,7 @@ const StockManagement = () => {
                         )}
                       </td>
                       <td>
-                        {stockItem.productName === stockData.editProductName ? (
+                        {editingProduct === stockItem.productName ? (
                           <input
                             className="stock-edit-field"
                             type="text"
@@ -217,7 +236,7 @@ const StockManagement = () => {
                         )}
                       </td>
                       <td>
-                        {stockItem.productName === stockData.editProductName ? (
+                        {editingProduct === stockItem.productName ? (
                           <div className="stock-edited-button">
                             <button
                               className="stock-save-button"

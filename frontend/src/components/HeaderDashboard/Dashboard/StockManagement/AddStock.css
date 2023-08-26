@@ -16,20 +16,23 @@
 font-style: bold;
 }
 .add-stock-form {
+  
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .add-stock-input-field {
-  margin: 8px 0;
-  padding: 8px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .add-stock-submit-button {
-  background-color: #007bff;
+  
+  background-color: #88f1c3;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -41,6 +44,22 @@ font-style: bold;
   box-shadow: 7px 7px 11px rgba(47, 56, 92, 0.2);
 }
 
-.add-stock-button:hover {
-  background-color: #6f89a5;
+.add-stock-submit-button:hover {
+  background-color: #2da06e; /* Slightly change color on hover */
+}
+.message {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.error {
+  background-color: #f44336;
+  color: white;
 }

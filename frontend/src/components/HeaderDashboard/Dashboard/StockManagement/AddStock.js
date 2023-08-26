@@ -5,67 +5,77 @@ import axios from "axios";
 
 const AddStock = (props) => {
   const token = localStorage.getItem("token");
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const [stockInfo, setstockInfo] = useState();
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState(""); 
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      const response = await axios.post(
-        "http://localhost:5000/api/admin/stock",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            // Add any other headers as needed
-          },
-        }
-      );
-      console.log("Stock added:", response.data);
-      setstockInfo(data);
+      const response = await fetch("http://localhost:5000/api/admin/stock", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        setMessage(responseData.message);
+        setMessageType("success");
+        reset(); 
+      } else {
+        const responseData = await response.json();
+        setMessage(responseData.message);
+        setMessageType("error");
+      }
     } catch (error) {
-      console.error("Error registering stock:", error);
+      console.error("Error:", error);
+      setMessage("An error occurred");
+      setMessageType("error");
     }
   };
 
   return (
     <div className="add-stock-container">
       <h2>Add Stock</h2>
+      {message && <div className={`message ${messageType}`}>{message}</div>}
       <form onSubmit={handleSubmit(onSubmit)} className="add-stock-form">
-        <label className="add-stock-label">Product Name</label>
         <input
           type="text"
           id="productName"
           className="add-stock-input-field"
+          placeholder="Enter Product Name"
           {...register("productName", {
             required: "Enter Product Name",
           })}
         />
-        <label className="add-stock-label">Product Quantity</label>
         <input
           type="number"
           id="productQuantity"
           className="add-stock-input-field"
+          placeholder="Enter Product Quantity"
           {...register("productQuantity", {
             required: "Enter Product Quantity",
           })}
         />
-        <label className="add-stock-label">cost price</label>
         <input
           type="number"
           id="costPrice"
           className="add-stock-input-field"
+          placeholder="Enter Cost Price"
           {...register("costPrice", {
             required: "Enter Cost Price",
           })}
         />
-        <label className="add-stock-label">Selling price</label>
         <input
           type="number"
           id="sellingPrice"
           className="add-stock-input-field"
+          placeholder="Enter Selling Price"
           {...register("sellingPrice", {
             required: "Enter Selling Price",
           })}

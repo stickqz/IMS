@@ -1,0 +1,7 @@
+.graph{
+    justify-self: center;
+    display: flex;
+    height: 38vh;
+    width: 40vw;
+    margin: 0 24% 0 2%;
+}

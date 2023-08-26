@@ -1,43 +1,122 @@
-.component-container h2 {
-	font-size: 1.5rem;
-	margin-bottom: 10px;
-	text-align: center;
+.component-container {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 25px;
+  margin-bottom: 20px;
+  height: 89vh;
+  width: 73.5vw;
+  align-self: center;
+}
+.top-section {
+  display: flex;
+  height: 40vh;
+  flex-direction: row;
+}
+.profile-section {
+  display: flex;
+  flex: 5;
+  flex-direction: column;
+  border-bottom: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  align-items: center;
+  background-color: #88f1c3;
+  box-shadow: 5px 5px 10px #888888;
+  margin: 21px 0px 21px 0px;
+}
+.profile-section:hover{
+	background-color: #56e8a9dd;
 }
 
-.data-entry {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 1rem;
-	margin: 8px;
-	padding: 6%;
-	background-color: rgb(181, 245, 243);
-	border-radius: 8px;
-	height: 100%;
-	gap: 100px;
+.profile-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px;
+  margin-bottom: 5%;
+  transition: transform 0.3s;
 }
+.profile-photo:hover {
+	transform: scale(1.1);
+  }
 
-.profile-data {
-	display: flex;
-	flex-direction: column;
-	height: 78vh;
-}
-
-.data-label {
+.profileData-username {
+	font-size: 18px;
 	font-weight: bold;
+	margin-bottom: 5px; 
+  }
+  
+  .profileData-email,
+  .profileData-shopName,
+  .profileData-salary {
+	font-size: 14px;
+	margin: 2px; 
+  }
+  
+  .profileData-shopName {
+	font-style: italic; 
+  }
+
+.sells-details {
+  display: flex;
+  flex: 5;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  flex-wrap: wrap;
+}
+.sells{
+	margin-top: 10%;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  width: 90%;
 }
 
-.data-value {
-	color: #007bff;
-}
-
-.close-shop {
-	background-color: rgb(255, 69, 69);
-	color: white;
+.sells-card {
 	text-align: center;
-	font: 1.5rem sans-serif;
-	margin-top: 100px;
-	padding: 20px 20px;
-	margin-left: 30%;
-	width: 200px;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	flex: 1;
+	background-color: #88f1c3;
+	box-shadow: 5px 5px 10px #888888;
+	transition: transform 0.3s, box-shadow 0.3s; 
+	position: relative;
+  }
+  
+  .sells-card:hover {
+	transform: scale(1.05); 
+	box-shadow: 8px 8px 12px #888888; 
+	background-color: #a2e8c9; 
+  }
+  
+  .sells-card::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transition: background-color 0.3s; 
+  }
+  
+  .sells-card:hover::after {
+	background-color: rgba(119, 245, 199, 0.355);
+	color: #ffffff; 
+  }
+  .sales-graph{
+	justify-items: center;
+  }
+
+
+.bottom-section {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  height: 40vh;
+  align-items: center;
 }
