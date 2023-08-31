@@ -82,13 +82,13 @@ router.post("/admin/employee", verifyToken, async (req, res) => {
       admin: userId, // Link to the admin who is creating the employee
     });
     await newEmployee.save();
-    
+
     res.setHeader("Content-Type", "application/json");
 
     res.status(201).json({ message: "Employee registered successfully" });
   } catch (error) {
     console.error("Employee Creation error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Incomplete Fields" });
   }
 });
 
@@ -165,6 +165,15 @@ router.post("/admin/stock", verifyToken, async (req, res) => {
     const admin = await Admin.findOne({ email: userId });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
+    }
+
+    const existingstock = admin.stock.find(
+      (item) => item.productName === productName
+    );
+    if (existingstock) {
+      return res
+        .status(400)
+        .json({ message: "Stock with this name already exists" });
     }
 
     // Create a new stock item
@@ -379,15 +388,16 @@ router.post(
       );
 
       if (!product) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-
-      // Check if the desired quantity is less than or equal to the available quantity
-      if (desiredQuantity <= product.productQuantity) {
-        res.status(200).json({ message: "Product is available" });
-      } else {
+        res.status(404).json({ message: "Product not found" });
+      } else if (desiredQuantity > product.productQuantity) {
         res.status(400).json({
           message: "Desired quantity is greater than available quantity",
+        });
+      } else {
+        // Handle other cases or return success response
+        res.status(200).json({
+          message: "Product is available",
+          sellingPrice: product.sellingPrice,
         });
       }
     } catch (error) {
@@ -396,6 +406,7 @@ router.post(
     }
   }
 );
+
 // Edit product quantities for multiple products and record sales history
 router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
   try {
@@ -408,12 +419,16 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
       return res.status(400).json({ message: "Admin not found" });
     }
 
-    // Create an array to store sales history records
-    const salesHistoryRecords = [];
+    // Create a new bill
+    const newBill = {
+      billNo: "", // This will be automatically generated in the pre-save hook
+      totalAmount: 0,
+      details: [],
+    };
 
     // Iterate through the list of products to edit
     for (const productInfo of products) {
-      const { productName, quantityToSubtract } = productInfo;
+      const { productName, quantity } = productInfo;
 
       // Find the product by name
       const product = admin.stock.find(
@@ -426,31 +441,42 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
           .json({ message: `Product not found: ${productName}` });
       }
 
-      // Subtract the desired quantity from the available quantity
-      product.productQuantity -= quantityToSubtract;
+      if (isNaN(quantity) || quantity <= 0) {
+        return res
+          .status(400)
+          .json({ message: `Invalid quantity: ${quantity}` });
+      }
+
+      // Calculate the net price for this product
+      const netPrice = quantity * product.sellingPrice;
+
+      // Update the product quantity
+      product.productQuantity -= quantity;
 
       // If the product quantity becomes zero or negative, remove the product
       if (product.productQuantity <= 0) {
         admin.stock.pull(product);
       }
 
-      // Create a sales history record
-      const salesRecord = {
-        productName: productName,
-        productQuantity: quantityToSubtract,
-        costPrice: product.costPrice,
-        sellingPrice: product.sellingPrice,
-      };
+      // Add this product to the bill details
+      newBill.details.push({
+        productName: product.productName,
+        price: product.sellingPrice,
+        quantity: quantity,
+        netPrice: netPrice,
+      });
 
-      // Push the sales record into the sales history array
-      salesHistoryRecords.push(salesRecord);
+      // Update the total amount of the bill
+      newBill.totalAmount += netPrice;
     }
 
     // Save the admin document with the updated product quantities
     await admin.save();
 
-    // Add the sales history records to the admin's salesHistory array
-    admin.salesHistory.push(...salesHistoryRecords);
+    // Push the newBill object into the admin's bills array
+    admin.bills.push(newBill);
+
+    // Save the admin document again to add the new bill to the array
     await admin.save();
 
     res
@@ -458,6 +484,24 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
       .json({ message: "Product quantities updated successfully" });
   } catch (error) {
     console.error("Error editing product quantities:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get("/admin/get-bills", verifyToken, async (req, res) => {
+  try {
+    // Retrieve the bills data from your database
+    const userId = req.user.email; // Assuming you have user authentication in place
+    const admin = await Admin.findOne({ email: userId });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    const bills = admin.bills; // Assuming you have a 'bills' array in your admin document
+    // Return the bills data as JSON response
+    res.status(200).json(bills);
+  } catch (error) {
+    console.error("Error fetching bills:", error);
     res.status(500).json({ message: "Server error" });
   }
 });

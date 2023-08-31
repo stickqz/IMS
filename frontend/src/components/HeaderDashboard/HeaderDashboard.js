@@ -13,7 +13,7 @@ import axios from "axios";
 
 function HeaderDashboard() {
   const [userData, setUserData] = useState(null);
-  const [selectedComponent, setSelectedComponent] = useState(null);
+  const [selectedComponent, setSelectedComponent] = useState("profile");
 
   const token = localStorage.getItem("token"); // Retrieve token from storage
 

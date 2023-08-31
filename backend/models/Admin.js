@@ -1,27 +1,39 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const salesHistorySchema = new Schema({
+const productDetailSchema = new Schema({
   productName: {
     type: String,
     required: true,
   },
-  productQuantity: {
+  price: {
     type: Number,
     required: true,
   },
-  costPrice: {
+  quantity: {
     type: Number,
     required: true,
   },
-  sellingPrice: {
+  netPrice: {
     type: Number,
     required: true,
   },
-  saleDateTime: {
+});
+
+const billSchema = new Schema({
+  billNo: {
+    type: String,
+    unique: true,
+  },
+  date: {
     type: Date,
-    default: Date.now, // Default to the current date and time
+    default: Date.now,
   },
+  totalAmount: {
+    type: Number,
+    required: true,
+  },
+  details: [productDetailSchema],
 });
 
 const stockSchema = new Schema({
@@ -63,7 +75,17 @@ const adminSchema = new Schema({
     required: true,
   },
   stock: [stockSchema],
-  salesHistory: [salesHistorySchema],
+  bills: [billSchema],
+});
+
+billSchema.pre("save", function (next) {
+  if (!this.billNo) {
+    this.billNo = "BN001";
+  } else {
+    const lastDigit = parseInt(this.billNo.slice(-3), 10);
+    this.billNo = `BN${String(lastDigit + 1).padStart(3, "0")}`;
+  }
+  next();
 });
 
 const Admin = mongoose.model("Admin", adminSchema);
