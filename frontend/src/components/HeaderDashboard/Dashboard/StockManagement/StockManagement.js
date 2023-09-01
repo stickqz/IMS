@@ -108,12 +108,31 @@ const StockManagement = () => {
       setEditingProduct(productName);
     }
   };
-  useEffect(() => {
-    // Make a GET request to fetch stock data from the backend
+  const fetchStockData = () => {
     axios
       .get("http://localhost:5000/api/admin/stock", {
         headers: {
-          Authorization: `Bearer ${token}`, // Include your authentication token here
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setStockData({
+          ...stockData,
+          stockData: response.data,
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching stock data:", error);
+      });
+  };
+
+  useEffect(() => {
+    
+    axios
+      .get("http://localhost:5000/api/admin/stock", {
+        headers: {
+          Authorization: `Bearer ${token}`, 
         },
       })
       .then((response) => {
@@ -148,14 +167,14 @@ const StockManagement = () => {
       {activeTab === "add" && (
         <div className="add-stock-animation">
           {" "}
-          <AddStock />{" "}
+          <AddStock onStockUpdate={fetchStockData} />{" "}
         </div>
       )}
       {activeTab === "view" && (
-        <div>
-          <h3>Stock List</h3>
+        <div >
+        
           {stockData.loading ? (
-            <p>Loading data...</p> // Display a loading message while fetching data
+            <div className="loading-spinner"></div>
           ) : (
             <div className=" stock-table-container">
               <table className="stock-list-table">

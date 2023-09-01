@@ -133,6 +133,7 @@ table button {
 	cursor: pointer;
 }
 
+
 .table-content::-webkit-scrollbar {
 	width: 8px;
 }

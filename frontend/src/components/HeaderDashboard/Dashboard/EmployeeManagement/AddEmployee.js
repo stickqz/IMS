@@ -1,7 +1,7 @@
 import "./AddEmployee.css";
 import React, { useState } from "react";
 
-const AddEmployee = ({ onAddEmployee }) => {
+const AddEmployee = ({ onAddEmployeeSuccess }) => {
   const token = localStorage.getItem("token");
 
   const initialState = {
@@ -47,6 +47,7 @@ const AddEmployee = ({ onAddEmployee }) => {
       if (response.ok) {
         setMessage(responseData.message);
         setMessageType("success");
+        onAddEmployeeSuccess();
         resetForm();
       } else {
         setMessage(responseData.message);

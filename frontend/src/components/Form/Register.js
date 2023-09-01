@@ -29,7 +29,8 @@ const Register = (props) => {
       <div className="reg-firsthalf-reg">
         <h1 className="heading">One of Us?</h1>
         <p className="reg-p">
-          If you already have an account, just sign in. we've missed you!
+          If you already have an account,
+          <br /> just sign in. we've missed you!
         </p>
         <div className="reg-button-container">
           <Link to="/">

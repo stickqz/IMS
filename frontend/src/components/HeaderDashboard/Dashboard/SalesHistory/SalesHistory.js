@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./SalesHistory.css";
-import "../../styles.css";
 import BillDetailsDialog from "./BillDetailsDialog";
 import axios from "axios";
 
@@ -34,8 +33,9 @@ const SalesHistory = () => {
   }, [token]);
 
   return (
-    <div className="component-container bill-table-container">
+    <div className="component-container">
       <h2 className="heading-main">Sales History</h2>
+      <div className="bill-table-container">
       <table className="bill-table">
         <thead>
           <tr>
@@ -57,7 +57,7 @@ const SalesHistory = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
       <BillDetailsDialog
         isOpen={selectedBill !== null}
         onClose={closeDialog}

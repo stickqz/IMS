@@ -117,6 +117,20 @@ const EmployeeManagement = () => {
         console.error("Error updating employee data:", error);
       });
   };
+  const fetchEmployeeData = () => {
+    axios
+      .get("http://localhost:5000/api/admin/employees/names", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setEmployeeData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching employee data:", error);
+      });
+  };
 
   useEffect(() => {
     axios
@@ -156,12 +170,12 @@ const EmployeeManagement = () => {
       </div>
       {activeTab === "add" && (
         <div className="add-employee-animation">
-          <AddEmployee />
+        <AddEmployee onAddEmployeeSuccess={fetchEmployeeData} />
         </div>
       )}
       {activeTab === "view" && (
         <div>
-          <h3>Employee List</h3>
+        
           <div className="employee-table-container">
             <table className="employee-table">
               <thead>

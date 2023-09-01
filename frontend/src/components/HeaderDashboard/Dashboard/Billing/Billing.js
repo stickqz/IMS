@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Billing.css";
-import "../../styles.css";
 import axios from "axios";
 
 const Billing = () => {
@@ -143,10 +142,15 @@ const Billing = () => {
       setSuccessMessage("");
     }, 3000);
 
+    const generateSuccessTimeout = setTimeout(() => {
+      setGenerateSuccessMessage("");
+    }, 3000);
+
     return () => {
       clearTimeout(successMessageTimeout);
+      clearTimeout(generateSuccessTimeout); 
     };
-  }, [successMessage]);
+  }, [successMessage, generateSuccessMessage]);
 
   return (
     <div className="component-container">
@@ -167,9 +171,9 @@ const Billing = () => {
             required
           />
         </div>
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {errorMessage && <div >{errorMessage}</div>}
         {successMessage && (
-          <div className="success-message">{successMessage}</div>
+          <div >{successMessage}</div>
         )}
         <button type="submit">Add</button>
       </form>
@@ -212,9 +216,13 @@ const Billing = () => {
       {generateErrorMessage && (
         <div className="error-message">{generateErrorMessage}</div>
       )}
+      {items.length === 0 ? (
+      <></>
+    ) : (
       <button onClick={handleGenerateBill} className="generate-bill-button">
         Generate
       </button>
+    )}
     </div>
   );
 };

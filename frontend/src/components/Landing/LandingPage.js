@@ -77,14 +77,14 @@ function LandingPage() {
         <div className="landing-login-form">
           <form onSubmit={handleLogin}>
             <label className="landing-name-field">Email</label>
-            <input type="text" name="email" placeholder="Enter Email" className="landing-page-input"/>
+            <input type="text" name="email" placeholder="Enter Email" className="login-input-field"/>
             <br />
             <label className="landing-name-field">Password</label>
             <input
               type="password"
               name="password"
               placeholder="Enter Password"
-              className="landing-page-input"
+              className="login-input-field"
             />
             <br />
             {loginError && <p className="landing-error">{loginError}</p>}
@@ -96,9 +96,9 @@ function LandingPage() {
       </div>
       <div className="landing-secondhalf">
         <h1 className="heading">New Here?</h1>
-        <p>
+        <p className="sign-details">
           Sign Up and discover a great
-          <br /> amount of new Opportunities!
+          <br />amount of new Opportunities!
         </p>
         <div className="landing-button-container">
           <Link to="/register">

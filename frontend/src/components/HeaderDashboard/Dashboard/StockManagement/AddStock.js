@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import "./AddStock.css";
 import axios from "axios";
 
-const AddStock = (props) => {
+const AddStock = ({ onStockUpdate }) => {
   const token = localStorage.getItem("token");
   const { register, handleSubmit, reset } = useForm();
 
@@ -26,6 +26,7 @@ const AddStock = (props) => {
         const responseData = await response.json();
         setMessage(responseData.message);
         setMessageType("success");
+        onStockUpdate();
         reset(); 
       } else {
         const responseData = await response.json();
