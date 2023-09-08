@@ -59,19 +59,17 @@ const Billing = () => {
         } catch (error) {
           if (error.message === "Request failed with status code 404") {
             setErrorMessage("Product not found.");
-            setSuccessMessage("");
-            setTimeout(() => {
-              setErrorMessage("");
-            }, 3000);
           } else if (error.message === "Request failed with status code 400") {
             setErrorMessage(
               "Desired quantity is greater than available quantity"
             );
-            setSuccessMessage("");
-            setTimeout(() => {
-              setErrorMessage("");
-            }, 3000);
+          } else {
+            setErrorMessage("An error occurred while adding the product.");
           }
+          setSuccessMessage("");
+          setTimeout(() => {
+            setErrorMessage("");
+          }, 3000);
           console.error("Error checking product availability:", error);
         }
       }
@@ -148,14 +146,14 @@ const Billing = () => {
 
     return () => {
       clearTimeout(successMessageTimeout);
-      clearTimeout(generateSuccessTimeout); 
+      clearTimeout(generateSuccessTimeout);
     };
   }, [successMessage, generateSuccessMessage]);
 
   return (
     <div className="component-container">
       <h2>Billing</h2>
-      <form onSubmit={handleSubmit} className="billing-form">
+      <div className="billing-form">
         <div className="form-inputs">
           <input
             type="text"
@@ -166,17 +164,16 @@ const Billing = () => {
           <input
             type="number"
             placeholder="Quantity"
-            min="1"
             onChange={(e) => setQuantity(e.target.value)}
             required
           />
         </div>
-        {errorMessage && <div >{errorMessage}</div>}
-        {successMessage && (
-          <div >{successMessage}</div>
-        )}
-        <button type="submit">Add</button>
-      </form>
+        {errorMessage && <div>{errorMessage}</div>}
+        {successMessage && <div>{successMessage}</div>}
+        <button onClick={handleSubmit} type="submit">
+          Add
+        </button>
+      </div>
       <div className="billing-table-container">
         <div className="total-price">Total Price: ${calculateTotalPrice()}</div>
         <div className="table-scroll">
@@ -217,12 +214,12 @@ const Billing = () => {
         <div className="error-message">{generateErrorMessage}</div>
       )}
       {items.length === 0 ? (
-      <></>
-    ) : (
-      <button onClick={handleGenerateBill} className="generate-bill-button">
-        Generate
-      </button>
-    )}
+        <></>
+      ) : (
+        <button onClick={handleGenerateBill} className="generate-bill-button">
+          Generate
+        </button>
+      )}
     </div>
   );
 };

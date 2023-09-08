@@ -6,7 +6,7 @@ const productDetailSchema = new Schema({
     type: String,
     required: true,
   },
-  price: {
+  sellPrice: {
     type: Number,
     required: true,
   },
@@ -15,6 +15,10 @@ const productDetailSchema = new Schema({
     required: true,
   },
   netPrice: {
+    type: Number,
+    required: true,
+  },
+  buyPrice: {
     type: Number,
     required: true,
   },
@@ -78,14 +82,37 @@ const adminSchema = new Schema({
   bills: [billSchema],
 });
 
-billSchema.pre("save", function (next) {
-  if (!this.billNo) {
-    this.billNo = "BN001";
-  } else {
-    const lastDigit = parseInt(this.billNo.slice(-3), 10);
-    this.billNo = `BN${String(lastDigit + 1).padStart(3, "0")}`;
-  }
-  next();
+adminSchema.virtual("netStock").get(function () {
+  const totalCostPrice = this.stock.reduce(
+    (total, item) => total + item.costPrice * item.productQuantity,
+    0
+  );
+  // Calculate netStock as the sum of cost price
+  return totalCostPrice;
+});
+
+adminSchema.virtual("netSales").get(function () {
+  const totalSales = this.bills.reduce(
+    (total, bill) => total + bill.totalAmount,
+    0
+  );
+
+  // Calculate netStock as the sum of cost price
+  return totalSales;
+});
+
+adminSchema.virtual("profit").get(function () {
+  const totalProfit = this.bills.reduce((total, bill) => {
+    const billProfit = bill.details.reduce((billTotal, productDetail) => {
+      return (
+        billTotal +
+        (productDetail.sellPrice - productDetail.buyPrice) *
+          productDetail.quantity
+      );
+    }, 0);
+    return total + billProfit;
+  }, 0);
+  return totalProfit;
 });
 
 const Admin = mongoose.model("Admin", adminSchema);

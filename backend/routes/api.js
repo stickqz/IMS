@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const generateUniqueId = require("generate-unique-id");
 
 const Admin = require("../models/Admin");
 const Employee = require("../models/Employee");
@@ -148,7 +149,17 @@ router.get("/:role/profile", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User profile not found" });
     }
 
-    res.status(200).json(userProfile);
+    let totalEmployees = 0;
+    if (role === "Admin") {
+      totalEmployees = await Employee.countDocuments({ admin: userId });
+    }
+
+    const userProfileJSON = userProfile.toJSON({ virtuals: true });
+
+    // Add the totalEmployees field to the JSON response
+    userProfileJSON.totalEmployees = totalEmployees;
+
+    res.status(200).json(userProfileJSON);
   } catch (error) {
     console.error("Profile Retrieval error:", error);
     console.error("Error Details:", error.message, error.stack);
@@ -419,9 +430,12 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
       return res.status(400).json({ message: "Admin not found" });
     }
 
+    const id = generateUniqueId({
+      length: 6,
+    });
     // Create a new bill
     const newBill = {
-      billNo: "", // This will be automatically generated in the pre-save hook
+      billNo: id,
       totalAmount: 0,
       details: [],
     };
@@ -450,6 +464,14 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
       // Calculate the net price for this product
       const netPrice = quantity * product.sellingPrice;
 
+      newBill.details.push({
+        productName: product.productName,
+        sellPrice: product.sellingPrice,
+        quantity: quantity,
+        netPrice: netPrice,
+        buyPrice: product.costPrice,
+      });
+
       // Update the product quantity
       product.productQuantity -= quantity;
 
@@ -457,14 +479,6 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
       if (product.productQuantity <= 0) {
         admin.stock.pull(product);
       }
-
-      // Add this product to the bill details
-      newBill.details.push({
-        productName: product.productName,
-        price: product.sellingPrice,
-        quantity: quantity,
-        netPrice: netPrice,
-      });
 
       // Update the total amount of the bill
       newBill.totalAmount += netPrice;
