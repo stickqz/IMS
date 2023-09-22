@@ -15,6 +15,38 @@
 	justify-content: center;
 	margin: 1% 7% 0% 7%;
   }
+  /* SalesHistory.css */
+
+.date-search {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	align-items: center;
+	margin-bottom: 20px;
+  }
+  
+  .date-search label {
+	margin-right: 10px;
+  }
+  
+  .date-search input[type="date"] {
+	padding: 5px;
+  }
+  
+  .date-search button {
+	padding: 5px 10px;
+	background-color: #c4fcfc;
+	
+	border: none;
+	cursor: pointer;
+	margin-right: 10px;
+  }
+  
+  .date-search button:hover {
+	background-color: #37b5a3;
+	color: white;
+  }
+  
   
   .bill-table-container::-webkit-scrollbar {
 	width: 6px;

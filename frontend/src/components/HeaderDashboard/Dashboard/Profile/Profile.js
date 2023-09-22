@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import profileImage from "./profile.jpg";
-import Graph from "./Graph/Graph";
 import axios from "axios";
 
 const Profile = () => {
@@ -61,11 +60,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className="bottom-section">
-        <div className="sales-graph">
-          <Graph />
-        </div>
-      </div>
+      
     </div>
   );
 };

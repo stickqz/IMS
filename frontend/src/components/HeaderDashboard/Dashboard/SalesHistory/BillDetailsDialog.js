@@ -27,7 +27,7 @@ const BillDetailsDialog = ({ isOpen, onClose, billDetails }) => {
 						{billDetails.map((item, index) => (
 							<tr key={index}>
 								<td>{item.productName}</td>
-								<td>{item.price}</td>
+								<td>{item.sellingPrice}</td>
 								<td>{item.quantity}</td>
 								<td>{item.netPrice}</td>
 							</tr>

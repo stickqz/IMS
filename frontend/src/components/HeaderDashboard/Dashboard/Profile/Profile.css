@@ -10,7 +10,7 @@
 }
 .top-section {
   display: flex;
-  height: 40vh;
+  height: 83vh;
   flex-direction: row;
 }
 .profile-section {
@@ -21,12 +21,12 @@
   padding: 20px;
   border-radius: 5px;
   align-items: center;
-  background-color: #88f1c3;
+  background-color: #6bf6f9;
   box-shadow: 5px 5px 10px #888888;
   margin: 21px 0px 21px 0px;
 }
 .profile-section:hover{
-	background-color: #56e8a9dd;
+	background-color: #01fcdfcb;
 }
 
 .profile-photo {
@@ -78,11 +78,11 @@
 
 .sells-card {
 	text-align: center;
-	padding: 20px;
+	padding: 20%;
 	border: 1px solid #ccc;
 	border-radius: 10px;
 	flex: 1;
-	background-color: #88f1c3;
+	background-color: #6bf6f9;
 	box-shadow: 5px 5px 10px #888888;
 	transition: transform 0.3s, box-shadow 0.3s; 
 	position: relative;
@@ -91,7 +91,7 @@
   .sells-card:hover {
 	transform: scale(1.05); 
 	box-shadow: 8px 8px 12px #888888; 
-	background-color: #a2e8c9; 
+	background-color: #01fcdfcb; 
   }
   
   .sells-card::after {
@@ -105,7 +105,7 @@
   }
   
   .sells-card:hover::after {
-	background-color: rgba(119, 245, 199, 0.355);
+	background-color: #01fcdfcb(119, 245, 199, 0.355);
 	color: #ffffff; 
   }
   .sales-graph{

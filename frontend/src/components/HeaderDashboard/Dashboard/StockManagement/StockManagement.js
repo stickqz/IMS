@@ -1,37 +1,104 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddStock from "./AddStock";
+import SaveConfirmation from "./SaveConfirmation/SaveConfirmation";
+import DeleteConfirmation from "./DeleteConfirmation/DeleteConfirmation";
 import "./StockManagement.css";
 
-const StockManagement = () => {
+const StockManagement = ({role}) => {
   const [activeTab, setActiveTab] = useState("view");
-  const [stockData, setStockData] = useState({
+  const [stockData, setStockData] = useState([]);
+  const [editProductName, setEditProductName] = useState(null);
+  const [editedStock, setEditedStock] = useState({
     productName: "",
-    quantity: 0,
-    editProductName: "",
-    editedProductQuantity: "",
-    editedCostPrice: "",
-    editedSellingPrice: "",
-    loading: true,
+    productQuantity: 0,
+    costPrice: "",
+    sellingPrice: "",
   });
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filterStockData = () => {
+    return stockData.filter((stockItem) =>
+      stockItem.productName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
 
   const token = localStorage.getItem("token");
 
-  const handleTabChange = (tab) => setActiveTab(tab);
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
 
-  const handleSaveEdit = (productName) => {
-    const updatedStockItem = {
-      productQuantity: stockData.editedProductQuantity,
-      costPrice: stockData.editedCostPrice,
-      sellingPrice: stockData.editedSellingPrice,
+  const handleEdit = (productName) => {
+    const stockItemToEdit = stockData.find(
+      (stockItem) => stockItem.productName === productName
+    );
+    if (stockItemToEdit) {
+      setEditProductName(productName);
+      setEditedStock({ ...stockItemToEdit });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditProductName(null);
+    setEditedStock({
+      productName: "",
+      productQuantity: 0,
+      costPrice: "",
+      sellingPrice: "",
+    });
+  };
+
+  const handleDeleteConfirmation = (productName) => {
+    setShowDeleteConfirmation(true);
+    setItemToDelete(productName);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(false);
+    setItemToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    axios
+      .delete(`http://localhost:5000/api/admin/stock/${itemToDelete}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        const updatedData = stockData.filter(
+          (stockItem) => stockItem.productName !== itemToDelete
+        );
+        setStockData(updatedData);
+        setShowDeleteConfirmation(false);
+        setItemToDelete(null);
+      })
+      .catch((error) => {
+        console.error("Error deleting stock data:", error);
+      });
+  };
+
+  const handleSaveConfirmation = (productName) => {
+    setShowSaveConfirmation(true);
+    setEditProductName(productName);
+  };
+
+  const handleConfirmSave = () => {
+    const updatedStock = {
+      productName: editedStock.productName,
+      productQuantity: editedStock.productQuantity,
+      costPrice: editedStock.costPrice,
+      sellingPrice: editedStock.sellingPrice,
     };
-  
-    // Make a PUT request to update the stock item in the backend
+
     axios
       .put(
-        `http://localhost:5000/api/admin/stock/${productName}`,
-        updatedStockItem,
+        `http://localhost:5000/api/admin/stock/${editProductName}`,
+        updatedStock,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,75 +106,27 @@ const StockManagement = () => {
         }
       )
       .then(() => {
-        // Update the local state with the edited data
-        const updatedStockData = stockData.stockData.map((stockItem) =>
-          stockItem.productName === productName
-            ? { ...stockItem, ...updatedStockItem }
+        const updatedData = stockData.map((stockItem) =>
+          stockItem.productName === editProductName
+            ? { ...updatedStock, productName: editProductName }
             : stockItem
         );
-        setStockData({
-          ...stockData,
-          stockData: updatedStockData,
-          editProductName: null,
-          editedProductQuantity: "",
-          editedCostPrice: "",
-          editedSellingPrice: "",
+
+        setStockData(updatedData);
+        setEditProductName(null);
+        setEditedStock({
+          productName: "",
+          productQuantity: 0,
+          costPrice: "",
+          sellingPrice: "",
         });
-        setEditingProduct(null);
+        setShowSaveConfirmation(false);
       })
       .catch((error) => {
         console.error("Error updating stock data:", error);
       });
   };
 
-  const handleDelete = (productName) => {
-    // Make a DELETE request to delete the stock item in the backend
-    axios
-      .delete(`http://localhost:5000/api/admin/stock/${productName}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include your authentication token here
-        },
-      })
-      .then(() => {
-        // Remove the deleted item from the local state
-        const updatedData = stockData.stockData.filter(
-          (stockItem) => stockItem.productName !== productName
-        );
-        setStockData({ ...stockData, stockData: updatedData });
-      })
-      .catch((error) => {
-        console.error("Error deleting stock data:", error);
-      });
-  };
-
-  const handleCancelEdit = () => {
-    setEditingProduct(null); // Clear the editingProduct state
-    setStockData({
-      ...stockData,
-      editProductName: null,
-      editedProductQuantity: "",
-      editedCostPrice: "",
-      editedSellingPrice: "",
-    });
-  };
-  
-
-  const handleEdit = (productName) => {
-    const selectedStockItem = stockData.stockData.find(
-      (stockItem) => stockItem.productName === productName
-    );
-  
-    if (selectedStockItem) {
-      setStockData({
-        ...stockData,
-        editProductName: productName,
-        editedProductQuantity: selectedStockItem.productQuantity,
-        editedCostPrice: selectedStockItem.costPrice,
-        editedSellingPrice: selectedStockItem.sellingPrice,
-      });
-      setEditingProduct(productName);
-    }
-  };
   const fetchStockData = () => {
     axios
       .get("http://localhost:5000/api/admin/stock", {
@@ -116,11 +135,7 @@ const StockManagement = () => {
         },
       })
       .then((response) => {
-        setStockData({
-          ...stockData,
-          stockData: response.data,
-          loading: false,
-        });
+        setStockData(response.data);
       })
       .catch((error) => {
         console.error("Error fetching stock data:", error);
@@ -128,28 +143,13 @@ const StockManagement = () => {
   };
 
   useEffect(() => {
-    
-    axios
-      .get("http://localhost:5000/api/admin/stock", {
-        headers: {
-          Authorization: `Bearer ${token}`, 
-        },
-      })
-      .then((response) => {
-        setStockData({
-          ...stockData,
-          stockData: response.data,
-          loading: false,
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching stock data:", error);
-      });
+    fetchStockData();
   }, [token]);
 
   return (
     <div className="component-container">
       <h2 className="stock-component-heading">Stock Management</h2>
+      
       <div className="stock-button-container">
         <button
           onClick={() => handleTabChange("view")}
@@ -166,138 +166,157 @@ const StockManagement = () => {
       </div>
       {activeTab === "add" && (
         <div className="add-stock-animation">
-          {" "}
-          <AddStock onStockUpdate={fetchStockData} />{" "}
+          <AddStock onStockUpdate={fetchStockData} />
         </div>
       )}
       {activeTab === "view" && (
-        <div >
-        
-          {stockData.loading ? (
-            <div className="loading-spinner"></div>
-          ) : (
-            <div className=" stock-table-container">
-              <table className="stock-list-table">
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Product Quantity</th>
-                    <th>Cost Price</th>
-                    <th>Selling Price</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stockData.stockData.map((stockItem) => (
-                    <tr key={stockItem.productName}>
-                      <td>{stockItem.productName}</td>
-                      <td>
-                        {editingProduct === stockItem.productName ? (
-                          <input
-                            className="stock-edit-field"
-                            type="text"
-                            value={
-                              stockData.editedProductQuantity !== null
-                                ? stockData.editedProductQuantity
-                                : stockItem.productQuantity
-                            }
-                            onChange={(e) =>
-                              setStockData({
-                                ...stockData,
-                                editedProductQuantity: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          stockItem.productQuantity
-                        )}
-                      </td>
-                      <td>
-                        {editingProduct === stockItem.productName ? (
-                          <input
-                            className="stock-edit-field"
-                            type="text"
-                            value={
-                              stockData.editedCostPrice !== null
-                                ? stockData.editedCostPrice
-                                : stockItem.costPrice
-                            }
-                            onChange={(e) =>
-                              setStockData({
-                                ...stockData,
-                                editedCostPrice: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          stockItem.costPrice
-                        )}
-                      </td>
-                      <td>
-                        {editingProduct === stockItem.productName ? (
-                          <input
-                            className="stock-edit-field"
-                            type="text"
-                            value={
-                              stockData.editedSellingPrice !== null
-                                ? stockData.editedSellingPrice
-                                : stockItem.sellingPrice
-                            }
-                            onChange={(e) =>
-                              setStockData({
-                                ...stockData,
-                                editedSellingPrice: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          stockItem.sellingPrice
-                        )}
-                      </td>
-                      <td>
-                        {editingProduct === stockItem.productName ? (
-                          <div className="stock-edited-button">
-                            <button
-                              className="stock-save-button"
-                              onClick={() =>
-                                handleSaveEdit(stockItem.productName)
-                              }
-                            >
-                              Save
-                            </button>
-                            <button
-                              className="stock-cancel-button"
-                              onClick={handleCancelEdit}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="stock-actions">
-                            <button
-                              className="stock-edit-button"
-                              onClick={() => handleEdit(stockItem.productName)}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="stock-delete-button"
-                              onClick={() =>
-                                handleDelete(stockItem.productName)
-                              }
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div>
+        <div class="search-bar">
+              <i class="icon">🔍</i>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-          )}
+          <div className="stock-table-container">
+            <table className="stock-list-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Product Quantity</th>
+                  <th>Cost Price</th>
+                  <th>Selling Price</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filterStockData().map((stockItem) => (
+                  <tr key={stockItem.productName}>
+                    <td>
+                      {stockItem.productName === editProductName ? (
+                        <input
+                          className="stock-edit-field"
+                          type="text"
+                          value={editedStock.productName}
+                          onChange={(e) =>
+                            setEditedStock({
+                              ...editedStock,
+                              productName: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        stockItem.productName
+                      )}
+                    </td>
+                    <td>
+                      {stockItem.productName === editProductName ? (
+                        <input
+                          className="stock-edit-field"
+                          type="text"
+                          value={editedStock.productQuantity}
+                          onChange={(e) =>
+                            setEditedStock({
+                              ...editedStock,
+                              productQuantity: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        stockItem.productQuantity
+                      )}
+                    </td>
+                    <td>
+                      {stockItem.productName === editProductName ? (
+                        <input
+                          className="stock-edit-field"
+                          type="text"
+                          value={editedStock.costPrice}
+                          onChange={(e) =>
+                            setEditedStock({
+                              ...editedStock,
+                              costPrice: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        stockItem.costPrice
+                      )}
+                    </td>
+                    <td>
+                      {stockItem.productName === editProductName ? (
+                        <input
+                          className="stock-edit-field"
+                          type="text"
+                          value={editedStock.sellingPrice}
+                          onChange={(e) =>
+                            setEditedStock({
+                              ...editedStock,
+                              sellingPrice: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        stockItem.sellingPrice
+                      )}
+                    </td>
+                    <td>
+                      {stockItem.productName === editProductName ? (
+                        <div className="stock-edited-button">
+                          <button
+                            className="stock-save-button"
+                            onClick={() =>
+                              handleSaveConfirmation(stockItem.productName)
+                            }
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="stock-cancel-button"
+                            onClick={() => handleCancelEdit()}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="stock-actions">
+                          <button
+                            className="stock-edit-button"
+                            onClick={() => handleEdit(stockItem.productName)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="stock-delete-button"
+                            onClick={() =>
+                              handleDeleteConfirmation(stockItem.productName)
+                            }
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+      )}
+      {showSaveConfirmation && (
+        <SaveConfirmation
+          onSaveConfirmed={() => handleConfirmSave()}
+          onCancel={() => setShowSaveConfirmation(false)}
+        />
+      )}
+      {showDeleteConfirmation && (
+        <DeleteConfirmation
+          onDelete={() => handleConfirmDelete()}
+          onCancel={() => handleCancelDelete()}
+        />
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import AddEmployee from "./AddEmployee";
 import DeleteConfirmation from "./DeleteConfirmation/DeleteConfirmation";
 import SaveConfirmation from "./SaveConfirmation/SaveConfirmation";
 import "./EmployeeManagement.css";
+import { HiDocumentSearch } from "react-icons/hi";
 
 const EmployeeManagement = () => {
   const [activeTab, setActiveTab] = useState("view");
@@ -18,10 +19,19 @@ const EmployeeManagement = () => {
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const token = localStorage.getItem("token");
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+  };
+  const filterEmployeeData = () => {
+    return employeeData.filter(
+      (employee) =>
+        employee.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        employee.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   };
 
   const handleEdit = (email) => {
@@ -150,6 +160,7 @@ const EmployeeManagement = () => {
   return (
     <div className="component-container">
       <h2 className="employee-component-heading">Employee Management</h2>
+
       <div className="employee-button-container">
         <button
           onClick={() => handleTabChange("view")}
@@ -170,13 +181,22 @@ const EmployeeManagement = () => {
       </div>
       {activeTab === "add" && (
         <div className="add-employee-animation">
-        <AddEmployee onAddEmployeeSuccess={fetchEmployeeData} />
+          <AddEmployee onAddEmployeeSuccess={fetchEmployeeData} />
         </div>
       )}
       {activeTab === "view" && (
         <div>
-        
+        <div class="search-bar">
+              <i class="icon">🔍</i>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           <div className="employee-table-container">
+            
             <table className="employee-table">
               <thead>
                 <tr>
@@ -188,7 +208,7 @@ const EmployeeManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {employeeData.map((employee) => (
+                {filterEmployeeData().map((employee) => (
                   <tr key={employee.email}>
                     <td>
                       {employee.email === editEmployeeemail ? (

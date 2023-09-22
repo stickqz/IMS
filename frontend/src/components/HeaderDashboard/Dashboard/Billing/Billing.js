@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Billing.css";
 import axios from "axios";
 
@@ -12,6 +12,7 @@ const Billing = () => {
   const [generateSuccessMessage, setGenerateSuccessMessage] = useState("");
   const [generateErrorMessage, setGenerateErrorMessage] = useState("");
 
+  const formRef = useRef(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (productName && quantity) {
@@ -51,6 +52,7 @@ const Billing = () => {
               price: response.data.sellingPrice, // Update price with sellingPrice from the backend
             };
             setItems([...items, newItem]);
+            formRef.current.reset();
             setProductName("");
             setQuantity("");
             setErrorMessage(""); // Clear any previous error message
@@ -154,6 +156,7 @@ const Billing = () => {
     <div className="component-container">
       <h2>Billing</h2>
       <div className="billing-form">
+      <form ref={formRef}>
         <div className="form-inputs">
           <input
             type="text"
@@ -168,6 +171,7 @@ const Billing = () => {
             required
           />
         </div>
+        </form>
         {errorMessage && <div>{errorMessage}</div>}
         {successMessage && <div>{successMessage}</div>}
         <button onClick={handleSubmit} type="submit">

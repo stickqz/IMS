@@ -9,8 +9,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { RiChatHistoryLine } from "react-icons/ri";
 import "./Navbar.css";
 
-const Navbar = ({ onSelectComponent }) => {
-  const token = localStorage.getItem("token");
+const Navbar = ({ onSelectComponent, role }) => {
   return (
     <div className="navbar">
       <button
@@ -22,30 +21,37 @@ const Navbar = ({ onSelectComponent }) => {
         </span>
         <span className="size">Profile</span>
       </button>
-      <button onClick={() => onSelectComponent("employee-management")}>
-        <span className="size">
-          <BsPersonFillGear />
-        </span>
-        <span className="size">Employees</span>
-      </button>
+
+      {role === "Admin" && (
+        <button onClick={() => onSelectComponent("employee-management")}>
+          <span className="size">
+            <BsPersonFillGear />
+          </span>
+          <span className="size">Employees</span>
+        </button>
+      )}
+
       <button onClick={() => onSelectComponent("stock-management")}>
         <span className="size">
           <BsFillBoxFill />
         </span>
         <span className="size">Stocks</span>
       </button>
+
       <button onClick={() => onSelectComponent("sales-history")}>
         <span className="size">
           <RiChatHistoryLine />
         </span>
         <span className="size">Sales</span>
       </button>
+
       <button onClick={() => onSelectComponent("billing")}>
         <span className="size">
           <BsReceiptCutoff />
         </span>
         <span className="size">Billing</span>
       </button>
+
       <button
         className="logout-button"
         onClick={() => {

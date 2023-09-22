@@ -166,6 +166,42 @@ router.get("/:role/profile", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// Route to get stock data for employees based on their admin's email
+router.get("/employee/stock", verifyToken, async (req, res) => {
+  try {
+    // Verify that the user has the "employee" role
+    if (req.user.role !== "employee") {
+      return res.status(403).json({ message: "Access denied. Not an employee." });
+    }
+
+    // Find the employee based on the user's token or any other authentication method you're using
+    const employeeEmail = req.user.email;
+    const employee = await Employee.findOne({ email: employeeEmail });
+
+    if (!employee) {
+      return res.status(400).json({ message: "Employee not found" });
+    }
+
+    // In this example, we assume that the admin's email is stored in the employee document.
+    const adminEmail = employee.admin;
+
+    // Find the admin based on the admin's email
+    const admin = await Admin.findOne({ email: adminEmail });
+
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Return the stock data from the admin's database
+    const stockData = admin.stock;
+    res.status(200).json({ stockData });
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+module.exports = router;
 
 router.post("/admin/stock", verifyToken, async (req, res) => {
   try {
@@ -519,5 +555,39 @@ router.get("/admin/get-bills", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+router.get("/admin/get-bills-by-date", verifyToken, async (req, res) => {
+  try {
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({ message: "Date parameter is required" });
+    }
+
+    // Retrieve the bills data from your database
+    const userId = req.user.email; // Assuming you have user authentication in place
+    const admin = await Admin.findOne({ email: userId });
+    if (!admin) {
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Convert the date string to a Date object without the time component
+    const searchDate = new Date(date);
+    searchDate.setHours(0, 0, 0, 0); // Set time to midnight
+
+    // Filter bills by date
+    const filteredBills = admin.bills.filter((bill) => {
+      const billDate = new Date(bill.date);
+      billDate.setHours(0, 0, 0, 0); // Set time to midnight
+      return billDate.getTime() === searchDate.getTime();
+    });
+
+    // Return the filtered bills data as JSON response
+    res.status(200).json(filteredBills);
+  } catch (error) {
+    console.error("Error fetching bills by date:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 module.exports = router;

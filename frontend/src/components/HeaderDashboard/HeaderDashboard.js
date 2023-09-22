@@ -15,8 +15,7 @@ function HeaderDashboard() {
   const [userData, setUserData] = useState(null);
   const [selectedComponent, setSelectedComponent] = useState("profile");
 
-  const token = localStorage.getItem("token"); // Retrieve token from storage
-
+  const token = localStorage.getItem("token"); 
   useEffect(() => {
     if (token) {
       const decoded = jwt_decode(token);
@@ -46,19 +45,21 @@ function HeaderDashboard() {
         });
     }
   }, [token]);
+     const decoded = jwt_decode(token);
+     const role = decoded.role;
 
   const renderComponent = () => {
     switch (selectedComponent) {
       case "profile":
-        return <Profile />;
+        return <Profile role={role} />;
       case "employee-management":
         return <EmployeeManagement />;
       case "stock-management":
-        return <StockManagement />;
+        return <StockManagement role={role}  />;
       case "sales-history":
-        return <SalesHistory />;
+        return <SalesHistory  role={role}  />;
       case "billing":
-        return <Billing />;
+        return <Billing role={role}  />;
       default:
         return null;
     }
@@ -81,7 +82,7 @@ function HeaderDashboard() {
       <div>
         <div className="header-dashboard">
           <div className="navbar-container">
-            <Navbar onSelectComponent={setSelectedComponent} />
+          <Navbar onSelectComponent={setSelectedComponent} role={role} />
           </div>
           <div className="dashboard">{renderComponent()}</div>
         </div>
