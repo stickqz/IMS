@@ -12,15 +12,17 @@ import "./Navbar.css";
 const Navbar = ({ onSelectComponent, role }) => {
   return (
     <div className="navbar">
-      <button
-        onClick={() => onSelectComponent("profile")}
-        className="profile-button"
-      >
-        <span className="size">
-          <BsFillPersonFill />
-        </span>
-        <span className="size">Profile</span>
-      </button>
+      {role === "Admin" && (
+        <button
+          onClick={() => onSelectComponent("profile")}
+          className="profile-button"
+        >
+          <span className="size">
+            <BsFillPersonFill />
+          </span>
+          <span className="size">Profile</span>
+        </button>
+      )}
 
       {role === "Admin" && (
         <button onClick={() => onSelectComponent("employee-management")}>

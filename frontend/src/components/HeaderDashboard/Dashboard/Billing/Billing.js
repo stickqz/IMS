@@ -11,8 +11,8 @@ const Billing = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [generateSuccessMessage, setGenerateSuccessMessage] = useState("");
   const [generateErrorMessage, setGenerateErrorMessage] = useState("");
-
   const formRef = useRef(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (productName && quantity) {
@@ -28,6 +28,7 @@ const Billing = () => {
         setTimeout(() => {
           setErrorMessage("");
         }, 3000);
+        return;
       } else {
         try {
           const response = await axios.post(
@@ -52,26 +53,28 @@ const Billing = () => {
               price: response.data.sellingPrice, // Update price with sellingPrice from the backend
             };
             setItems([...items, newItem]);
-            formRef.current.reset();
             setProductName("");
             setQuantity("");
             setErrorMessage(""); // Clear any previous error message
             setSuccessMessage("Product added successfully!");
+            formRef.current.reset();
           }
         } catch (error) {
           if (error.message === "Request failed with status code 404") {
             setErrorMessage("Product not found.");
+            setSuccessMessage("");
+            setTimeout(() => {
+              setErrorMessage("");
+            }, 3000);
           } else if (error.message === "Request failed with status code 400") {
             setErrorMessage(
               "Desired quantity is greater than available quantity"
             );
-          } else {
-            setErrorMessage("An error occurred while adding the product.");
+            setSuccessMessage("");
+            setTimeout(() => {
+              setErrorMessage("");
+            }, 3000);
           }
-          setSuccessMessage("");
-          setTimeout(() => {
-            setErrorMessage("");
-          }, 3000);
           console.error("Error checking product availability:", error);
         }
       }
@@ -94,7 +97,6 @@ const Billing = () => {
     if (
       formattedData.some((item) => isNaN(item.quantity) || item.quantity <= 0)
     ) {
-      console.log("error is me");
       return;
     }
     try {
@@ -155,8 +157,7 @@ const Billing = () => {
   return (
     <div className="component-container">
       <h2>Billing</h2>
-      <div className="billing-form">
-      <form ref={formRef}>
+      <form ref={formRef} onSubmit={handleSubmit} className="billing-form">
         <div className="form-inputs">
           <input
             type="text"
@@ -171,13 +172,10 @@ const Billing = () => {
             required
           />
         </div>
-        </form>
         {errorMessage && <div>{errorMessage}</div>}
         {successMessage && <div>{successMessage}</div>}
-        <button onClick={handleSubmit} type="submit">
-          Add
-        </button>
-      </div>
+        <button type="submit">Add</button>
+      </form>
       <div className="billing-table-container">
         <div className="total-price">Total Price: ${calculateTotalPrice()}</div>
         <div className="table-scroll">

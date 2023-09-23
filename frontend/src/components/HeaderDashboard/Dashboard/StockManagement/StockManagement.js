@@ -5,7 +5,7 @@ import SaveConfirmation from "./SaveConfirmation/SaveConfirmation";
 import DeleteConfirmation from "./DeleteConfirmation/DeleteConfirmation";
 import "./StockManagement.css";
 
-const StockManagement = ({role}) => {
+const StockManagement = ({ role }) => {
   const [activeTab, setActiveTab] = useState("view");
   const [stockData, setStockData] = useState([]);
   const [editProductName, setEditProductName] = useState(null);
@@ -149,7 +149,7 @@ const StockManagement = ({role}) => {
   return (
     <div className="component-container">
       <h2 className="stock-component-heading">Stock Management</h2>
-      
+
       <div className="stock-button-container">
         <button
           onClick={() => handleTabChange("view")}
@@ -171,15 +171,15 @@ const StockManagement = ({role}) => {
       )}
       {activeTab === "view" && (
         <div>
-        <div class="search-bar">
-              <i class="icon">🔍</i>
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+          <div class="search-bar">
+            <i class="icon">🔍</i>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <div className="stock-table-container">
             <table className="stock-list-table">
               <thead>

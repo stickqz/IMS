@@ -3,7 +3,7 @@ import "./SalesHistory.css";
 import BillDetailsDialog from "./BillDetailsDialog";
 import axios from "axios";
 
-const SalesHistory = ({role}) => {
+const SalesHistory = ({ role }) => {
   const token = localStorage.getItem("token");
   const [bills, setBills] = useState([]);
   const [selectedBill, setSelectedBill] = useState(null);
@@ -42,15 +42,15 @@ const SalesHistory = ({role}) => {
           console.error("Error fetching filtered bills:", error);
         });
     } else {
-      setFilteredBills(bills); 
+      setFilteredBills(bills);
       setSearchPerformed(false);
     }
   };
 
   const clearSearch = () => {
-    setSearchDate(""); 
+    setSearchDate("");
     setFilteredBills(bills);
-    setSearchPerformed(false); 
+    setSearchPerformed(false);
   };
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const SalesHistory = ({role}) => {
       })
       .then((response) => {
         setBills(response.data);
-        setFilteredBills(response.data); 
+        setFilteredBills(response.data);
       })
       .catch((error) => {
         console.error("Error fetching bills:", error);

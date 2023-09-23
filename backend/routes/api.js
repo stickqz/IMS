@@ -171,7 +171,9 @@ router.get("/employee/stock", verifyToken, async (req, res) => {
   try {
     // Verify that the user has the "employee" role
     if (req.user.role !== "employee") {
-      return res.status(403).json({ message: "Access denied. Not an employee." });
+      return res
+        .status(403)
+        .json({ message: "Access denied. Not an employee." });
     }
 
     // Find the employee based on the user's token or any other authentication method you're using
@@ -248,7 +250,16 @@ router.get("/admin/stock", verifyToken, async (req, res) => {
   try {
     // Find the admin based on the user's token or any other authentication method you're using
     const userId = req.user.email;
-    const admin = await Admin.findOne({ email: userId });
+    const role = req.user.role;
+    let adminId = "";
+    if (role === "employee") {
+      const employee = await Employee.findOne({ email: userId });
+      adminId = employee.admin;
+    } else {
+      adminId = req.user.email;
+    }
+
+    const admin = await Admin.findOne({ email: adminId });
 
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
@@ -424,7 +435,16 @@ router.post(
 
       // Find the admin based on the user's token or any other authentication method you're using
       const userId = req.user.email;
-      const admin = await Admin.findOne({ email: userId });
+      const role = req.user.role;
+      let adminId = "";
+      if (role === "employee") {
+        const employee = await Employee.findOne({ email: userId });
+        adminId = employee.admin;
+      } else {
+        adminId = req.user.email;
+      }
+
+      const admin = await Admin.findOne({ email: adminId });
       if (!admin) {
         return res.status(400).json({ message: "Admin not found" });
       }
@@ -461,7 +481,16 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
 
     // Find the admin based on the user's token or any other authentication method you're using
     const userId = req.user.email;
-    const admin = await Admin.findOne({ email: userId });
+    const role = req.user.role;
+    let adminId = "";
+    if (role === "employee") {
+      const employee = await Employee.findOne({ email: userId });
+      adminId = employee.admin;
+    } else {
+      adminId = req.user.email;
+    }
+
+    const admin = await Admin.findOne({ email: adminId });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
     }
@@ -541,8 +570,17 @@ router.put("/admin/edit-product-quantities", verifyToken, async (req, res) => {
 router.get("/admin/get-bills", verifyToken, async (req, res) => {
   try {
     // Retrieve the bills data from your database
-    const userId = req.user.email; // Assuming you have user authentication in place
-    const admin = await Admin.findOne({ email: userId });
+    const userId = req.user.email;
+    const role = req.user.role;
+    let adminId = "";
+    if (role === "employee") {
+      const employee = await Employee.findOne({ email: userId });
+      adminId = employee.admin;
+    } else {
+      adminId = req.user.email;
+    }
+
+    const admin = await Admin.findOne({ email: adminId });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
     }
@@ -564,8 +602,17 @@ router.get("/admin/get-bills-by-date", verifyToken, async (req, res) => {
     }
 
     // Retrieve the bills data from your database
-    const userId = req.user.email; // Assuming you have user authentication in place
-    const admin = await Admin.findOne({ email: userId });
+    const userId = req.user.email;
+    const role = req.user.role;
+    let adminId = "";
+    if (role === "employee") {
+      const employee = await Employee.findOne({ email: userId });
+      adminId = employee.admin;
+    } else {
+      adminId = req.user.email;
+    }
+
+    const admin = await Admin.findOne({ email: adminId });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
     }
@@ -588,6 +635,5 @@ router.get("/admin/get-bills-by-date", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 module.exports = router;
