@@ -117,6 +117,19 @@ table button {
 	margin-bottom: 10px;
 }
 
+.billing-component-heading {
+	font-size: 24px;
+	margin-top: 1.2%;
+	display: inline-flex;
+	align-items: center;
+	margin-bottom: 5%;
+	background: #009879; /* Updated color */
+	padding: 10px 20px;
+	border-radius: 5px;
+	color: white;
+	width: 99%;
+}
+
 .generate-bill-button {
 	display: block;
 	margin: 0 auto;
@@ -132,7 +145,6 @@ table button {
 	width: 150px;
 	cursor: pointer;
 }
-
 
 .table-content::-webkit-scrollbar {
 	width: 8px;
