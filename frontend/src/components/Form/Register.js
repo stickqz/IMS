@@ -34,7 +34,9 @@ const Register = (props) => {
         </p>
         <div className="reg-button-container">
           <Link to="/">
-            <button className={`reg-create-account-button-sign`}>Sign in</button>
+            <button className={`reg-create-account-button-sign`}>
+              Sign in
+            </button>
           </Link>
         </div>
       </div>
@@ -66,8 +68,8 @@ const Register = (props) => {
             <label>Password</label>
             <input
               type="password"
-              className="input-field"
               id="password"
+              className="input-field"
               placeholder="********"
               {...register("password", {
                 required: "Enter Password",
