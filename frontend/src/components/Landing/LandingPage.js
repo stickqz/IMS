@@ -6,7 +6,7 @@ import axios from "axios";
 function LandingPage() {
 	const [activeTab, setActiveTab] = useState("loginAdmin");
 	const [loginError, setLoginError] = useState(null);
-	const uri = "http://ims-stickqzs-projects.vercel.app";
+	const uri = "https://ims-stickqzs-projects.vercel.app";
 
 	const handleTabChange = (tab) => {
 		setActiveTab(tab);

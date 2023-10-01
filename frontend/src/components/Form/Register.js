@@ -8,7 +8,7 @@ const Register = (props) => {
 	const { register, handleSubmit, reset } = useForm();
 	const [userInfo, setUserInfo] = useState();
 	const [message, setMessage] = useState("");
-	const uri = "http://ims-stickqzs-projects.vercel.app";
+	const uri = "https://ims-stickqzs-projects.vercel.app";
 
 	const onSubmit = async (data) => {
 		try {

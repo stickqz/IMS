@@ -4,7 +4,7 @@ import BillDetailsDialog from "./BillDetailsDialog";
 import axios from "axios";
 
 const SalesHistory = ({ role }) => {
-	const uri = "http://ims-stickqzs-projects.vercel.app";
+	const uri = "https://ims-stickqzs-projects.vercel.app";
 	const token = localStorage.getItem("token");
 	const [bills, setBills] = useState([]);
 	const [selectedBill, setSelectedBill] = useState(null);

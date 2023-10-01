@@ -12,7 +12,7 @@ const Billing = () => {
 	const [generateSuccessMessage, setGenerateSuccessMessage] = useState("");
 	const [generateErrorMessage, setGenerateErrorMessage] = useState("");
 	const formRef = useRef(null);
-	const uri = "http://ims-stickqzs-projects.vercel.app";
+	const uri = "https://ims-stickqzs-projects.vercel.app";
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();

@@ -2,7 +2,7 @@ import "./AddEmployee.css";
 import React, { useState } from "react";
 
 const AddEmployee = ({ onAddEmployeeSuccess }) => {
-	const uri = "http://ims-stickqzs-projects.vercel.app";
+	const uri = "https://ims-stickqzs-projects.vercel.app";
 	const token = localStorage.getItem("token");
 
 	const initialState = {
