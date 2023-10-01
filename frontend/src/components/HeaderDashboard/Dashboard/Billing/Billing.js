@@ -12,6 +12,7 @@ const Billing = () => {
 	const [generateSuccessMessage, setGenerateSuccessMessage] = useState("");
 	const [generateErrorMessage, setGenerateErrorMessage] = useState("");
 	const formRef = useRef(null);
+	const uri = "http://ims-stickqzs-projects.vercel.app";
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -32,7 +33,7 @@ const Billing = () => {
 			} else {
 				try {
 					const response = await axios.post(
-						"http://localhost:5000/api/admin/check-product-availability",
+						uri + "/api/admin/check-product-availability",
 						{
 							productName,
 							desiredQuantity: parseInt(quantity),
@@ -112,7 +113,7 @@ const Billing = () => {
 			// Calculate the total amount based on the formatted data
 
 			const response = await axios.put(
-				"http://localhost:5000/api/admin/edit-product-quantities",
+				uri + "/api/admin/edit-product-quantities",
 				{
 					products: formattedData,
 				},

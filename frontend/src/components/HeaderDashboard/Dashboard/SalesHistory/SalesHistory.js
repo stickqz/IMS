@@ -4,6 +4,7 @@ import BillDetailsDialog from "./BillDetailsDialog";
 import axios from "axios";
 
 const SalesHistory = ({ role }) => {
+	const uri = "http://ims-stickqzs-projects.vercel.app";
 	const token = localStorage.getItem("token");
 	const [bills, setBills] = useState([]);
 	const [selectedBill, setSelectedBill] = useState(null);
@@ -26,14 +27,11 @@ const SalesHistory = ({ role }) => {
 	const handleSearch = () => {
 		if (searchDate) {
 			axios
-				.get(
-					`http://localhost:5000/api/admin/get-bills-by-date?date=${searchDate}`,
-					{
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					}
-				)
+				.get(uri + `/api/admin/get-bills-by-date?date=${searchDate}`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
 				.then((response) => {
 					setFilteredBills(response.data);
 					setSearchPerformed(true);
@@ -55,7 +53,7 @@ const SalesHistory = ({ role }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:5000/api/admin/get-bills", {
+			.get(uri + "/api/admin/get-bills", {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},

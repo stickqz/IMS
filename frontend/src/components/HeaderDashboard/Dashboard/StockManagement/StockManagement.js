@@ -6,6 +6,7 @@ import DeleteConfirmation from "./DeleteConfirmation/DeleteConfirmation";
 import "./StockManagement.css";
 
 const StockManagement = ({ role }) => {
+	const uri = "http://ims-stickqzs-projects.vercel.app";
 	const [activeTab, setActiveTab] = useState("view");
 	const [stockData, setStockData] = useState([]);
 	const [editProductName, setEditProductName] = useState(null);
@@ -66,7 +67,7 @@ const StockManagement = ({ role }) => {
 
 	const handleConfirmDelete = () => {
 		axios
-			.delete(`http://localhost:5000/api/admin/stock/${itemToDelete}`, {
+			.delete(uri + `/api/admin/stock/${itemToDelete}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -98,15 +99,11 @@ const StockManagement = ({ role }) => {
 		};
 
 		axios
-			.put(
-				`http://localhost:5000/api/admin/stock/${editProductName}`,
-				updatedStock,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
+			.put(uri + `/api/admin/stock/${editProductName}`, updatedStock, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
 			.then(() => {
 				const updatedData = stockData.map((stockItem) =>
 					stockItem.productName === editProductName
@@ -131,7 +128,7 @@ const StockManagement = ({ role }) => {
 
 	const fetchStockData = () => {
 		axios
-			.get("http://localhost:5000/api/admin/stock", {
+			.get(uri + "/api/admin/stock", {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},

@@ -12,6 +12,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 
 function HeaderDashboard() {
+	const uri = "http://ims-stickqzs-projects.vercel.app";
 	const [userData, setUserData] = useState(null);
 	const [selectedComponent, setSelectedComponent] = useState("billing");
 
@@ -23,7 +24,7 @@ function HeaderDashboard() {
 			// console.log(role);
 
 			axios
-				.get(`http://localhost:5000/api/${role}/profile`, {
+				.get(uri + `/api/${role}/profile`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
