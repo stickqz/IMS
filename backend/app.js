@@ -7,15 +7,6 @@ const apiRoutes = require("./routes/api");
 
 require("dotenv").config();
 
-app.use(
-	cors({
-		origin: [""],
-		methods: ["POST", "GET"],
-		credentials: true,
-	})
-);
-app.use(express.json());
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
