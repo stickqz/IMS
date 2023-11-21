@@ -12,8 +12,7 @@ const Billing = () => {
 	const [generateSuccessMessage, setGenerateSuccessMessage] = useState("");
 	const [generateErrorMessage, setGenerateErrorMessage] = useState("");
 	const formRef = useRef(null);
-	const uri = "https://ims-stickqzs-projects.vercel.app";
-
+	const uri = process.env.REACT_APP_API;
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (productName && quantity) {

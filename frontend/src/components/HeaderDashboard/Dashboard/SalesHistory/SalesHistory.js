@@ -4,7 +4,7 @@ import BillDetailsDialog from "./BillDetailsDialog";
 import axios from "axios";
 
 const SalesHistory = ({ role }) => {
-	const uri = "https://ims-stickqzs-projects.vercel.app";
+	const uri = process.env.REACT_APP_API;
 	const token = localStorage.getItem("token");
 	const [bills, setBills] = useState([]);
 	const [selectedBill, setSelectedBill] = useState(null);

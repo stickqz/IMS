@@ -12,7 +12,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 
 function HeaderDashboard() {
-	const uri = "https://ims-stickqzs-projects.vercel.app";
+	const uri = process.env.REACT_APP_API;
 	const [userData, setUserData] = useState(null);
 	const [selectedComponent, setSelectedComponent] = useState("billing");
 

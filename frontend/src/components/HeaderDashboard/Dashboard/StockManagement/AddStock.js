@@ -4,7 +4,7 @@ import "./AddStock.css";
 import axios from "axios";
 
 const AddStock = ({ onStockUpdate }) => {
-	const uri = "https://ims-stickqzs-projects.vercel.app";
+	const uri = process.env.REACT_APP_API;
 	const token = localStorage.getItem("token");
 	const { register, handleSubmit, reset } = useForm();
 

@@ -11,13 +11,6 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
-app.use(
-	cors({
-		origin: ["https://ims-client-delta.vercel.app"],
-		methods: ["POST", "GET"],
-		credentials: true,
-	})
-);
 app.use(express.json());
 
 mongoose

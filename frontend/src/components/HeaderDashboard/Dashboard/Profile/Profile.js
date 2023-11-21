@@ -7,7 +7,7 @@ import profileImage from "./profile.png";
 
 const Profile = () => {
 	const token = localStorage.getItem("token");
-	const uri = "https://ims-stickqzs-projects.vercel.app";
+	const uri = process.env.REACT_APP_API;
 	const [profileData, setProfileData] = useState({});
 	const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
 	const [password, setPassword] = useState(""); // State for the entered password

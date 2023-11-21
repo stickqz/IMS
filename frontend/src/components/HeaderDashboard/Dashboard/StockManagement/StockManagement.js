@@ -6,7 +6,7 @@ import DeleteConfirmation from "./DeleteConfirmation/DeleteConfirmation";
 import "./StockManagement.css";
 
 const StockManagement = ({ role }) => {
-	const uri = "https://ims-stickqzs-projects.vercel.app";
+	const uri = process.env.REACT_APP_API;
 	const [activeTab, setActiveTab] = useState("view");
 	const [stockData, setStockData] = useState([]);
 	const [editProductName, setEditProductName] = useState(null);

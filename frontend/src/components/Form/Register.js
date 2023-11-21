@@ -8,8 +8,8 @@ const Register = (props) => {
 	const { register, handleSubmit, reset } = useForm();
 	const [userInfo, setUserInfo] = useState();
 	const [message, setMessage] = useState("");
-	const uri = "https://ims-stickqzs-projects.vercel.app";
-
+	//remove this uri and make it localhost
+	const uri = process.env.REACT_APP_API;
 	const onSubmit = async (data) => {
 		try {
 			const response = await axios.post(uri + "/api/admin/signup", data);

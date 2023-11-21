@@ -7,7 +7,7 @@ import "./EmployeeManagement.css";
 import { HiDocumentSearch } from "react-icons/hi";
 
 const EmployeeManagement = () => {
-	const uri = "https://ims-stickqzs-projects.vercel.app";
+	const uri = process.env.REACT_APP_API;
 	const [activeTab, setActiveTab] = useState("view");
 	const [employeeData, setEmployeeData] = useState([]);
 	const [editEmployeeemail, setEditEmployeeemail] = useState(null);
